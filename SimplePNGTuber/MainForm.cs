@@ -204,5 +204,11 @@ namespace SimplePNGTuber
             server.Stop();
             Application.Exit();
         }
+
+        private void CreateModelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CreateModelForm cmf = new CreateModelForm(settings);
+            cmf.ShowDialog();
+        }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
@@ -11,13 +12,14 @@ namespace SimplePNGTuber
 {
     public class PNGTuberModel
     {
+        public readonly string Name;
         public string CurrentExpression { get; set; } = "neutral";
 
         private Dictionary<string, Image[]> expressions;
         private Dictionary<string, Image> accessories;
-        private PNGTuberModel()
+        private PNGTuberModel(string name)
         {
-
+            this.Name = name;
         }
 
         public List<string> GetExpressions()
@@ -117,7 +119,7 @@ namespace SimplePNGTuber
                         }
                     }
                 }
-                PNGTuberModel model = new PNGTuberModel
+                PNGTuberModel model = new PNGTuberModel(name)
                 {
                     expressions = expressions,
                     accessories = accessories,
@@ -130,7 +132,27 @@ namespace SimplePNGTuber
             }
         }
 
-        public static readonly PNGTuberModel Empty = new PNGTuberModel()
+        public static void Save(string dir, string name, Dictionary<string, Image[]> expressions, Dictionary<string, Image> accessories)
+        {
+            string tmpDir = dir + "/modelTmp";
+            Directory.CreateDirectory(tmpDir);
+            foreach(var expName in expressions.Keys)
+            {
+                var imgs = expressions[expName];
+                for(int i = 0; i < imgs.Length; i++)
+                {
+                    imgs[i].Save(tmpDir + "/exp_" + expName + "_" + i + ".png");
+                }
+            }
+            foreach(var accName in accessories.Keys)
+            {
+                accessories[accName].Save(tmpDir + "/acc_" + accName + ".png");
+            }
+            ZipFile.CreateFromDirectory(tmpDir, dir + "/" + name + ".zip");
+            Directory.Delete(tmpDir, true);
+        }
+
+        public static readonly PNGTuberModel Empty = new PNGTuberModel("empty")
         {
             expressions = new Dictionary<string, Image[]>()
             {

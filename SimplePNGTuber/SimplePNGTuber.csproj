@@ -78,6 +78,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Audio\AudioMonitor.cs" />
+    <Compile Include="CreateModelForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CreateModelForm.Designer.cs">
+      <DependentUpon>CreateModelForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ExpressionPopup.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExpressionPopup.Designer.cs">
+      <DependentUpon>ExpressionPopup.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -100,6 +112,12 @@
     </Compile>
     <Compile Include="Server\HttpServer.cs" />
     <Compile Include="Settings.cs" />
+    <EmbeddedResource Include="CreateModelForm.resx">
+      <DependentUpon>CreateModelForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExpressionPopup.resx">
+      <DependentUpon>ExpressionPopup.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
