@@ -14,13 +14,18 @@ namespace SimplePNGTuber
     public partial class OptionsForm : Form
     {
         private readonly Settings settings;
+        private readonly AudioMonitor monitor;
 
-        public OptionsForm(Settings settings)
+        public OptionsForm(Settings settings, AudioMonitor monitor)
         {
             InitializeComponent();
+
             this.settings = settings;
+            this.monitor = monitor;
+
             this.dirText.Text = settings.ModelDir;
             this.voiceThreshold.Value = (int)(settings.VoiceThreshold * 100);
+            this.voiceSmoothing.Value = (int)(settings.VoiceSmoothing * 100);
             this.blinkFrequency.Value = (int)(settings.BlinkFrequency * 100);
             this.micCombo.Items.Clear();
             foreach(DeviceInfo info in AudioMonitor.ListInputDevices())
@@ -32,6 +37,24 @@ namespace SimplePNGTuber
             serverPort.Value = settings.ServerPort;
 
             LoadModels();
+            monitor.LevelChanged += HandleLevelChanged;
+        }
+
+        private void HandleLevelChanged(object sender, LevelChangedEventArgs e)
+        {
+            Action updateLevels = () =>
+            {
+                rawLevelProgress.Value = (int)(e.LevelRaw * 100);
+                smoothedLevelProgress.Value = (int)(e.LevelSmoothed * 100);
+            };
+            try
+            {
+                this.Invoke(updateLevels);
+            }
+            catch (Exception)
+            {
+                // discard
+            }
         }
 
         private void LoadModels()
@@ -60,6 +83,11 @@ namespace SimplePNGTuber
             settings.Save();
         }
 
+        private void OptionsForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            monitor.LevelChanged -= HandleLevelChanged;
+        }
+
         private void ModelCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
             settings.ModelName = modelCombo.SelectedItem as string;
@@ -68,6 +96,11 @@ namespace SimplePNGTuber
         private void VoiceThreshold_ValueChanged(object sender, EventArgs e)
         {
             settings.VoiceThreshold = (double) voiceThreshold.Value / 100.0;
+        }
+
+        private void VoiceSmoothing_ValueChanged(object sender, EventArgs e)
+        {
+            settings.VoiceSmoothing = (double) voiceSmoothing.Value / 100;
         }
 
         private void BlinkFrequency_ValueChanged(object sender, EventArgs e)
@@ -89,7 +122,7 @@ namespace SimplePNGTuber
             }
         }
 
-        private void selectColorBtn_Click(object sender, EventArgs e)
+        private void SelectColorBtn_Click(object sender, EventArgs e)
         {
             var res = bgColorDialog.ShowDialog();
             if(res == DialogResult.OK)

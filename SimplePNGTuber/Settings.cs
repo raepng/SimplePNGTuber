@@ -1,9 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Text.Json;
 using System.IO;
 using System.Drawing;
 
@@ -15,6 +11,7 @@ namespace SimplePNGTuber
         private string modelDir = "";
         private string modelName = "";
         private double voiceThreshold = 0.05;
+        private double voiceSmoothing = 0.90;
         private double blinkFrequency = 0.03;
         private int micDevice = 0;
         private int serverPort = 8000;
@@ -45,6 +42,15 @@ namespace SimplePNGTuber
             set
             {
                 voiceThreshold = value;
+                SettingChanged?.Invoke(this, new SettingChangeEventArgs() { ChangeType = SettingChangeType.VOICE });
+            }
+        }
+        public double VoiceSmoothing
+        {
+            get => voiceSmoothing;
+            set
+            {
+                voiceSmoothing = value;
                 SettingChanged?.Invoke(this, new SettingChangeEventArgs() { ChangeType = SettingChangeType.VOICE });
             }
         }
@@ -100,7 +106,7 @@ namespace SimplePNGTuber
                 {
                     string name = s.Replace(".zip", "");
                     name = name.Substring(name.LastIndexOf(Path.DirectorySeparatorChar) + 1).ToLower();
-                    if(PNGTuberModel.Load(ModelDir, name) != PNGTuberModel.Empty)
+                    if (PNGTuberModel.Load(ModelDir, name) != PNGTuberModel.Empty)
                     {
                         models.Add(name);
                     }
@@ -119,10 +125,11 @@ namespace SimplePNGTuber
                     modelDir = settingsStrings[0],
                     modelName = settingsStrings[1],
                     voiceThreshold = double.Parse(settingsStrings[2]),
-                    blinkFrequency = double.Parse(settingsStrings[3]),
-                    micDevice = int.Parse(settingsStrings[4]),
-                    serverPort = int.Parse(settingsStrings[5]),
-                    bgColor = (Color) new ColorConverter().ConvertFromString(settingsStrings[6]),
+                    voiceSmoothing = double.Parse(settingsStrings[3]),
+                    blinkFrequency = double.Parse(settingsStrings[4]),
+                    micDevice = int.Parse(settingsStrings[5]),
+                    serverPort = int.Parse(settingsStrings[6]),
+                    bgColor = (Color)new ColorConverter().ConvertFromString(settingsStrings[7]),
                 };
             }
             else
@@ -135,7 +142,7 @@ namespace SimplePNGTuber
 
         internal void Save()
         {
-            string settingsString = modelDir + "\n" + modelName + "\n" + voiceThreshold + "\n" + blinkFrequency + "\n" + micDevice + "\n" + serverPort + "\n" + ToHex(bgColor);
+            string settingsString = modelDir + "\n" + modelName + "\n" + voiceThreshold + "\n" + voiceSmoothing + "\n" + blinkFrequency + "\n" + micDevice + "\n" + serverPort + "\n" + ToHex(bgColor);
             File.WriteAllText(SettingsFile, settingsString);
         }
     }

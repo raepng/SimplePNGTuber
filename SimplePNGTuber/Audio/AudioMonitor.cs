@@ -12,8 +12,10 @@ namespace SimplePNGTuber
     public class AudioMonitor
     {
 		public event EventHandler<StateChangedEventArgs> VoiceStateChanged;
+		public event EventHandler<LevelChangedEventArgs> LevelChanged;
 
 		public double AcivationThreshold { get; set; } = 0.05;
+		public double SmoothingAmount { get; set; } = 0;
 		public int RecordingDevice
 		{
 			set
@@ -26,7 +28,7 @@ namespace SimplePNGTuber
 				Microphone = new WaveInEvent
 				{
 					DeviceNumber = value,
-					WaveFormat = new WaveFormat(rate: 44100, bits: 16, channels: 1),
+					WaveFormat = new WaveFormat(rate: 48000, bits: 16, channels: 1),
 					BufferMilliseconds = 50
 				};
 				Microphone.DataAvailable += ProcessData;
@@ -36,6 +38,7 @@ namespace SimplePNGTuber
 
         public WaveFormat WaveFormat => throw new NotImplementedException();
 
+		private double previousLevel = 0;
         private bool VoiceActive = false;
 		private WaveInEvent Microphone;
 
@@ -56,11 +59,14 @@ namespace SimplePNGTuber
 			}
 
 			double peakPercent = peakValue / maxValue;
-			if(peakPercent > AcivationThreshold && !VoiceActive)
+			double peakPercentSmoothed = (peakPercent * (1 - SmoothingAmount)) + (previousLevel * SmoothingAmount);
+			LevelChanged?.Invoke(this, new LevelChangedEventArgs() { LevelRaw = peakPercent, LevelSmoothed = peakPercentSmoothed });
+			previousLevel = peakPercentSmoothed;
+			if(peakPercentSmoothed > AcivationThreshold && !VoiceActive)
             {
 				VoiceStateChanged?.Invoke(this, new StateChangedEventArgs() { VoiceActive = this.VoiceActive = true });
             }
-			else if(peakPercent < AcivationThreshold && VoiceActive)
+			else if(peakPercentSmoothed < AcivationThreshold && VoiceActive)
             {
 				VoiceStateChanged?.Invoke(this, new StateChangedEventArgs() { VoiceActive = this.VoiceActive = false });
 			}
@@ -100,4 +106,10 @@ namespace SimplePNGTuber
     {
 		public bool VoiceActive { get; set; }
     }
+
+	public class LevelChangedEventArgs : EventArgs
+	{
+		public double LevelRaw { get; set; }
+		public double LevelSmoothed { get; set; }
+	}
 }

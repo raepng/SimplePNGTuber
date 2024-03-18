@@ -156,7 +156,7 @@ namespace SimplePNGTuber
         {
             expressions = new Dictionary<string, Image[]>()
             {
-                { "neutral", new Image[] { Resources.EmptyImage, Resources.EmptyImage, Resources.EmptyImage, Resources.EmptyImage } }
+                { "neutral", new Image[] { Resources.diego0, Resources.diego1, Resources.diego0, Resources.diego1 } }
             }
         };
     }

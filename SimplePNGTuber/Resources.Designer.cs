@@ -63,9 +63,19 @@ namespace SimplePNGTuber {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap EmptyImage {
+        internal static System.Drawing.Bitmap diego0 {
             get {
-                object obj = ResourceManager.GetObject("EmptyImage", resourceCulture);
+                object obj = ResourceManager.GetObject("diego0", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap diego1 {
+            get {
+                object obj = ResourceManager.GetObject("diego1", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

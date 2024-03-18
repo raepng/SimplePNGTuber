@@ -19,7 +19,7 @@ namespace SimplePNGTuber
         {
             this.settings = settings;
             InitializeComponent();
-            expressionListBox.Items.Add(new Expression("neutral", new Image[4] { Resources.EmptyImage, Resources.EmptyImage, Resources.EmptyImage, Resources.EmptyImage }, new string[4] { "", "", "", "" }));
+            expressionListBox.Items.Add(new Expression("neutral", new Image[4] { Resources.diego0, Resources.diego1, Resources.diego0, Resources.diego1 }, new string[4] { "", "", "", "" }));
         }
 
         private void ExpressionListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -160,7 +160,7 @@ namespace SimplePNGTuber
     public struct Expression
     {
         internal static readonly Expression Empty = new Expression("",
-            new Image[4] { Resources.EmptyImage, Resources.EmptyImage, Resources.EmptyImage, Resources.EmptyImage },
+            new Image[4] { Resources.diego0, Resources.diego1, Resources.diego0, Resources.diego1 },
             new string[4] { "", "", "", "" });
 
         public string Name;

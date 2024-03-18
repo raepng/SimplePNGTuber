@@ -14,7 +14,7 @@ namespace SimplePNGTuber
     public partial class ExpressionPopup : Form
     {
         public string ExpressionName { get; private set; }
-        public Image[] Images { get; private set; } = new Image[4] { Resources.EmptyImage, Resources.EmptyImage, Resources.EmptyImage, Resources.EmptyImage };
+        public Image[] Images { get; private set; } = new Image[4] { Resources.diego0, Resources.diego1, Resources.diego0, Resources.diego1 };
         public string[] ImageLocations { get; private set; } = new string[4] { "", "", "", "" };
 
         public ExpressionPopup(Expression expression)

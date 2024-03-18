@@ -64,6 +64,7 @@ namespace SimplePNGTuber
                     break;
                 case SettingChangeType.VOICE:
                     monitor.AcivationThreshold = settings.VoiceThreshold;
+                    monitor.SmoothingAmount = settings.VoiceSmoothing;
                     break;
                 case SettingChangeType.MIC:
                     monitor.RecordingDevice = settings.MicDevice;
@@ -196,19 +197,18 @@ namespace SimplePNGTuber
 
         private void OptionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new OptionsForm(settings).Show();
+            new OptionsForm(settings, monitor).ShowDialog();
+        }
+
+        private void CreateModelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new CreateModelForm(settings).ShowDialog();
         }
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             server.Stop();
             Application.Exit();
-        }
-
-        private void CreateModelToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            CreateModelForm cmf = new CreateModelForm(settings);
-            cmf.ShowDialog();
         }
     }
 }
