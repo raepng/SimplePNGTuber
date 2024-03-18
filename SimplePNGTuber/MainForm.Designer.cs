@@ -34,8 +34,8 @@
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pngTuberImageBox)).BeginInit();
             this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -74,7 +74,7 @@
             this.createModelToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(181, 92);
+            this.contextMenuStrip.Size = new System.Drawing.Size(146, 70);
             // 
             // optionsToolStripMenuItem
             // 
@@ -83,19 +83,19 @@
             this.optionsToolStripMenuItem.Text = "Options";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.OptionsToolStripMenuItem_Click);
             // 
+            // createModelToolStripMenuItem
+            // 
+            this.createModelToolStripMenuItem.Name = "createModelToolStripMenuItem";
+            this.createModelToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
+            this.createModelToolStripMenuItem.Text = "Create Model";
+            this.createModelToolStripMenuItem.Click += new System.EventHandler(this.CreateModelToolStripMenuItem_Click);
+            // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(145, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
-            // 
-            // createModelToolStripMenuItem
-            // 
-            this.createModelToolStripMenuItem.Name = "createModelToolStripMenuItem";
-            this.createModelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.createModelToolStripMenuItem.Text = "Create Model";
-            this.createModelToolStripMenuItem.Click += new System.EventHandler(this.CreateModelToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -106,9 +106,8 @@
             this.Controls.Add(this.pngTuberImageBox);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "MainForm";
-            this.ShowInTaskbar = false;
             this.Text = "SimplePNGTuber";
-            this.TransparencyKey = System.Drawing.Color.Transparent;
+            this.TransparencyKey = System.Drawing.Color.Cyan;
             ((System.ComponentModel.ISupportInitialize)(this.pngTuberImageBox)).EndInit();
             this.contextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);

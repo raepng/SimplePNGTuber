@@ -36,7 +36,15 @@ namespace SimplePNGTuber
         private double blink = 0;
 
         public PNGTuberModel Model { get; private set; } = PNGTuberModel.Empty;
-        public string Expression { get => Model.CurrentExpression; set => Model.CurrentExpression = value; }
+        public string Expression
+        {
+            get => Model.CurrentExpression;
+            set
+            {
+                Model.CurrentExpression = value;
+                UpdateImage();
+            }
+        }
 
         public HashSet<string> Accessories { get; } = new HashSet<string>();
 
@@ -69,6 +77,7 @@ namespace SimplePNGTuber
                     break;
                 case SettingChangeType.BACKGROUND:
                     this.BackColor = settings.BackgroundColor;
+                    this.TransparencyKey = settings.BackgroundColor;
                     break;
             }
         }
@@ -78,6 +87,7 @@ namespace SimplePNGTuber
             LoadModel();
             monitor.RecordingDevice = settings.MicDevice;
             this.BackColor = settings.BackgroundColor;
+            this.TransparencyKey = settings.BackgroundColor;
         }
 
         private void LoadModel()
