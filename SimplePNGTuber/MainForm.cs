@@ -27,8 +27,8 @@ namespace SimplePNGTuber
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 
         private readonly Random random = new Random();
-        private readonly AudioMonitor monitor = new AudioMonitor();
         private readonly Settings settings = Settings.Load();
+        private readonly AudioMonitor monitor;
         private readonly HttpServer server;
 
 
@@ -43,6 +43,8 @@ namespace SimplePNGTuber
         public MainForm()
         {
             InitializeComponent();
+
+            monitor = new AudioMonitor(settings);
 
             monitor.VoiceStateChanged += VoiceStateChanged;
             settings.SettingChanged += SettingChanged;
@@ -62,10 +64,6 @@ namespace SimplePNGTuber
                     LoadModel();
                     UpdateImage();
                     break;
-                case SettingChangeType.VOICE:
-                    monitor.AcivationThreshold = settings.VoiceThreshold;
-                    monitor.SmoothingAmount = settings.VoiceSmoothing;
-                    break;
                 case SettingChangeType.MIC:
                     monitor.RecordingDevice = settings.MicDevice;
                     break;
@@ -78,7 +76,6 @@ namespace SimplePNGTuber
         private void LoadFromSettings()
         {
             LoadModel();
-            monitor.AcivationThreshold = settings.VoiceThreshold;
             monitor.RecordingDevice = settings.MicDevice;
             this.BackColor = settings.BackgroundColor;
         }

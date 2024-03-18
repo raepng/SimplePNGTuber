@@ -14,8 +14,8 @@ namespace SimplePNGTuber
 		public event EventHandler<StateChangedEventArgs> VoiceStateChanged;
 		public event EventHandler<LevelChangedEventArgs> LevelChanged;
 
-		public double AcivationThreshold { get; set; } = 0.05;
-		public double SmoothingAmount { get; set; } = 0;
+		private Settings settings;
+
 		public int RecordingDevice
 		{
 			set
@@ -42,9 +42,9 @@ namespace SimplePNGTuber
         private bool VoiceActive = false;
 		private WaveInEvent Microphone;
 
-		public AudioMonitor()
+		public AudioMonitor(Settings settings)
         {
-			
+			this.settings = settings;
 		}
 
         private void ProcessData(object sender, WaveInEventArgs e)
@@ -59,14 +59,14 @@ namespace SimplePNGTuber
 			}
 
 			double peakPercent = peakValue / maxValue;
-			double peakPercentSmoothed = (peakPercent * (1 - SmoothingAmount)) + (previousLevel * SmoothingAmount);
+			double peakPercentSmoothed = (peakPercent * (1 - settings.VoiceSmoothing)) + (previousLevel * settings.VoiceSmoothing);
 			LevelChanged?.Invoke(this, new LevelChangedEventArgs() { LevelRaw = peakPercent, LevelSmoothed = peakPercentSmoothed });
 			previousLevel = peakPercentSmoothed;
-			if(peakPercentSmoothed > AcivationThreshold && !VoiceActive)
+			if(peakPercentSmoothed > settings.VoiceThreshold && !VoiceActive)
             {
 				VoiceStateChanged?.Invoke(this, new StateChangedEventArgs() { VoiceActive = this.VoiceActive = true });
             }
-			else if(peakPercentSmoothed < AcivationThreshold && VoiceActive)
+			else if(peakPercentSmoothed < settings.VoiceThreshold && VoiceActive)
             {
 				VoiceStateChanged?.Invoke(this, new StateChangedEventArgs() { VoiceActive = this.VoiceActive = false });
 			}
