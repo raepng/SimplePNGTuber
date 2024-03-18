@@ -145,8 +145,6 @@ namespace SimplePNGTuber
             }
         }
 
-        private static String ToHex(Color c) => $"#{c.R:X2}{c.G:X2}{c.B:X2}";
-
         internal void Save()
         {
             string json = JsonSerializer.Serialize(settings);
