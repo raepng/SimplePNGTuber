@@ -36,15 +36,17 @@
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.animationTimer = new System.Windows.Forms.Timer(this.components);
             ((System.ComponentModel.ISupportInitialize)(this.pngTuberImageBox)).BeginInit();
             this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // pngTuberImageBox
             // 
+            this.pngTuberImageBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.pngTuberImageBox.BackColor = System.Drawing.Color.Transparent;
             this.pngTuberImageBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pngTuberImageBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pngTuberImageBox.InitialImage = null;
             this.pngTuberImageBox.Location = new System.Drawing.Point(0, 0);
             this.pngTuberImageBox.Name = "pngTuberImageBox";
@@ -97,6 +99,12 @@
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
+            // animationTimer
+            // 
+            this.animationTimer.Enabled = true;
+            this.animationTimer.Interval = 15;
+            this.animationTimer.Tick += new System.EventHandler(this.AnimationTimer_Tick);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -107,7 +115,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "MainForm";
             this.Text = "SimplePNGTuber";
-            this.TransparencyKey = System.Drawing.Color.Cyan;
+            this.TransparencyKey = System.Drawing.Color.Transparent;
             ((System.ComponentModel.ISupportInitialize)(this.pngTuberImageBox)).EndInit();
             this.contextMenuStrip.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -123,6 +131,7 @@
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem createModelToolStripMenuItem;
+        private System.Windows.Forms.Timer animationTimer;
     }
 }
 

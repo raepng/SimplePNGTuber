@@ -35,6 +35,9 @@ namespace SimplePNGTuber
         private PNGState state = PNGState.SILENT;
         private double blink = 0;
 
+        private bool animationActive = false;
+        private double animationProgress = -1;
+
         public PNGTuberModel Model { get; private set; } = PNGTuberModel.Empty;
         public string Expression
         {
@@ -95,13 +98,16 @@ namespace SimplePNGTuber
             Model = PNGTuberModel.Load(settings.ModelDir, settings.ModelName);
             var modelSilent = Model.GetState(PNGState.SILENT, new List<string>());
             notifyIcon.Icon = ConvertToIco(modelSilent, modelSilent.Width);
-            this.Size = new Size(modelSilent.Width, modelSilent.Height);
+            this.Size = new Size(modelSilent.Width, modelSilent.Height + settings.AnimationHeight);
+            this.pngTuberImageBox.Size = new Size(modelSilent.Width, modelSilent.Height);
+            pngTuberImageBox.Location = new Point(0, settings.AnimationHeight);
         }
 
         private void VoiceStateChanged(object sender, StateChangedEventArgs e)
         {
             if(e.VoiceActive)
             {
+                animationActive = true;
                 if(state == PNGState.BLINKING)
                 {
                     state = PNGState.SPEAKING_BLINKING;
@@ -155,6 +161,20 @@ namespace SimplePNGTuber
             }
         }
 
+        private void AnimationTimer_Tick(object sender, EventArgs e)
+        {
+            if(animationActive)
+            {
+                animationProgress += settings.AnimationSpeed;
+                pngTuberImageBox.Location = new Point(0, (int) Math.Abs(settings.AnimationHeight * Math.Sin(animationProgress)));
+                if(animationProgress >= 1)
+                {
+                    animationActive = false;
+                    animationProgress = -1;
+                }
+            }
+        }
+
         private void UpdateImage()
         {
             pngTuberImageBox.BackgroundImage = Model.GetState(state, Accessories);
@@ -169,7 +189,7 @@ namespace SimplePNGTuber
             }
             else if(e.Button == MouseButtons.Right)
             {
-                contextMenuStrip.Show(this, e.Location);
+                contextMenuStrip.Show(pngTuberImageBox, e.Location);
             }
         }
 

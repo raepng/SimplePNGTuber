@@ -2,105 +2,119 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Drawing;
+using System.Text.Json;
 
 namespace SimplePNGTuber
 {
     public class Settings
     {
-        private const string SettingsFile = "sptsettings";
-        private string modelDir = "";
-        private string modelName = "";
-        private double voiceThreshold = 0.05;
-        private double voiceSmoothing = 0.90;
-        private double blinkFrequency = 0.03;
-        private int micDevice = 0;
-        private int serverPort = 8000;
-        private Color bgColor = Color.Cyan;
+        private const string SettingsFile = "sptsettings.json";
+        private SettingsInternal settings;
 
         public event EventHandler<SettingChangeEventArgs> SettingChanged;
         public string ModelDir
         {
-            get => modelDir;
+            get => settings.modelDir;
             set
             {
-                modelDir = value;
+                settings.modelDir = value;
                 SettingChanged?.Invoke(this, new SettingChangeEventArgs() { ChangeType = SettingChangeType.MODEL });
             }
         }
         public string ModelName
         {
-            get => modelName;
+            get => settings.modelName;
             set
             {
-                modelName = value;
+                settings.modelName = value;
                 SettingChanged?.Invoke(this, new SettingChangeEventArgs() { ChangeType = SettingChangeType.MODEL });
             }
         }
         public double VoiceThreshold
         {
-            get => voiceThreshold;
+            get => settings.voiceThreshold;
             set
             {
-                voiceThreshold = value;
+                settings.voiceThreshold = value;
                 SettingChanged?.Invoke(this, new SettingChangeEventArgs() { ChangeType = SettingChangeType.VOICE });
             }
         }
         public double VoiceSmoothing
         {
-            get => voiceSmoothing;
+            get => settings.voiceSmoothing;
             set
             {
-                voiceSmoothing = value;
+                settings.voiceSmoothing = value;
                 SettingChanged?.Invoke(this, new SettingChangeEventArgs() { ChangeType = SettingChangeType.VOICE });
             }
         }
         public double BlinkFrequency
         {
-            get => blinkFrequency;
+            get => settings.blinkFrequency;
             set
             {
-                blinkFrequency = value;
+                settings.blinkFrequency = value;
                 SettingChanged?.Invoke(this, new SettingChangeEventArgs() { ChangeType = SettingChangeType.BLINK });
             }
         }
         public int MicDevice
         {
-            get => micDevice;
+            get => settings.micDevice;
             set
             {
-                micDevice = value;
+                settings.micDevice = value;
                 SettingChanged?.Invoke(this, new SettingChangeEventArgs() { ChangeType = SettingChangeType.MIC });
             }
         }
 
         public int ServerPort
         {
-            get => serverPort;
+            get => settings.serverPort;
             set
             {
-                serverPort = value;
+                settings.serverPort = value;
                 SettingChanged?.Invoke(this, new SettingChangeEventArgs() { ChangeType = SettingChangeType.SERVER });
             }
         }
 
         public Color BackgroundColor
         {
-            get => bgColor;
+            get => (Color) new ColorConverter().ConvertFromString(settings.bgColor);
             set
             {
-                bgColor = value;
+                settings.bgColor = new ColorConverter().ConvertToString(value);
                 SettingChanged?.Invoke(this, new SettingChangeEventArgs() { ChangeType = SettingChangeType.BACKGROUND });
+            }
+        }
+
+        public int AnimationHeight
+        {
+            get => settings.animationHeight;
+            set
+            {
+                settings.animationHeight = value;
+                SettingChanged?.Invoke(this, new SettingChangeEventArgs() { ChangeType = SettingChangeType.ANIMATION });
+            }
+        }
+
+        public double AnimationSpeed
+        {
+            get => settings.animationSpeed;
+            set
+            {
+                settings.animationSpeed = value;
+                SettingChanged?.Invoke(this, new SettingChangeEventArgs() { ChangeType = SettingChangeType.ANIMATION });
             }
         }
 
         public List<string> GetModelNames()
         {
-            if (string.IsNullOrEmpty(modelDir))
+            if (string.IsNullOrEmpty(settings.modelDir))
             {
                 return new List<string>();
             }
             List<string> models = new List<string>();
-            foreach (string s in Directory.EnumerateFiles(modelDir))
+            foreach (string s in Directory.EnumerateFiles(settings.modelDir))
             {
                 if (s.EndsWith(".zip"))
                 {
@@ -119,22 +133,15 @@ namespace SimplePNGTuber
         {
             if (File.Exists(SettingsFile))
             {
-                string[] settingsStrings = File.ReadAllLines(SettingsFile);
-                return new Settings()
-                {
-                    modelDir = settingsStrings[0],
-                    modelName = settingsStrings[1],
-                    voiceThreshold = double.Parse(settingsStrings[2]),
-                    voiceSmoothing = double.Parse(settingsStrings[3]),
-                    blinkFrequency = double.Parse(settingsStrings[4]),
-                    micDevice = int.Parse(settingsStrings[5]),
-                    serverPort = int.Parse(settingsStrings[6]),
-                    bgColor = (Color)new ColorConverter().ConvertFromString(settingsStrings[7]),
-                };
+                SettingsInternal res = JsonSerializer.Deserialize<SettingsInternal>(File.ReadAllText(SettingsFile));
+                return new Settings() { settings = res };
             }
             else
             {
-                return new Settings();
+                return new Settings()
+                {
+                    settings = new SettingsInternal("", "", 0.05, 0.90, 0.03, 0, 8000, "#00ff00", 10, 0.1)
+                };
             }
         }
 
@@ -142,8 +149,40 @@ namespace SimplePNGTuber
 
         internal void Save()
         {
-            string settingsString = modelDir + "\n" + modelName + "\n" + voiceThreshold + "\n" + voiceSmoothing + "\n" + blinkFrequency + "\n" + micDevice + "\n" + serverPort + "\n" + ToHex(bgColor);
-            File.WriteAllText(SettingsFile, settingsString);
+            string json = JsonSerializer.Serialize(settings);
+            File.WriteAllText(SettingsFile, json);
+        }
+
+        internal struct SettingsInternal
+        {
+            public string modelDir { get; set; }
+            public string modelName { get; set; }
+            public double voiceThreshold { get; set; }
+            public double voiceSmoothing { get; set; }
+            public double blinkFrequency { get; set; }
+            public int micDevice { get; set; }
+            public int serverPort { get; set; }
+            public string bgColor { get; set; }
+            public int animationHeight { get; set; }
+            public double animationSpeed { get; set; }
+
+            public SettingsInternal(string modelDir, string modelName,
+                double voiceThreshold, double voiceSmoothing,
+                double blinkFrequency, int micDevice,
+                int serverPort, string bgColor,
+                int animationHeight, double animationSpeed)
+            {
+                this.modelDir = modelDir;
+                this.modelName = modelName;
+                this.voiceThreshold = voiceThreshold;
+                this.voiceSmoothing = voiceSmoothing;
+                this.blinkFrequency = blinkFrequency;
+                this.micDevice = micDevice;
+                this.serverPort = serverPort;
+                this.bgColor = bgColor;
+                this.animationHeight = animationHeight;
+                this.animationSpeed = animationSpeed;
+            }
         }
     }
 
@@ -159,6 +198,7 @@ namespace SimplePNGTuber
         MIC,
         BLINK,
         SERVER,
-        BACKGROUND
+        BACKGROUND,
+        ANIMATION
     }
 }
