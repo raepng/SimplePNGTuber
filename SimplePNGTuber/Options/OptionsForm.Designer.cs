@@ -1,4 +1,4 @@
-﻿namespace SimplePNGTuber
+﻿namespace SimplePNGTuber.Options
 {
     partial class OptionsForm
     {

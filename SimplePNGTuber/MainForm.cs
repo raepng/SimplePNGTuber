@@ -1,16 +1,14 @@
-﻿using SimplePNGTuber.Server;
+﻿using SimplePNGTuber.Audio;
+using SimplePNGTuber.Model;
+using SimplePNGTuber.ModelEditor;
+using SimplePNGTuber.Options;
+using SimplePNGTuber.Server;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace SimplePNGTuber
@@ -27,7 +25,6 @@ namespace SimplePNGTuber
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 
         private readonly Random random = new Random();
-        private readonly Settings settings = Settings.Load();
         private readonly AudioMonitor monitor;
         private readonly HttpServer server;
 
@@ -38,7 +35,7 @@ namespace SimplePNGTuber
         private bool animationActive = false;
         private double animationProgress = -1;
 
-        public PNGTuberModel Model { get; private set; } = PNGTuberModel.Empty;
+        public PNGModel Model { get; private set; } = PNGModel.Empty;
         public string Expression
         {
             get => Model.CurrentExpression;
@@ -55,17 +52,44 @@ namespace SimplePNGTuber
         {
             InitializeComponent();
 
-            monitor = new AudioMonitor(settings);
+            monitor = new AudioMonitor();
 
             monitor.VoiceStateChanged += VoiceStateChanged;
-            settings.SettingChanged += SettingChanged;
+            Settings.Instance.SettingChanged += SettingChanged;
             LoadFromSettings();
             UpdateImage();
 
-            server = new HttpServer(settings, this);
+            server = new HttpServer(this);
             server.Start();
 
             server.MutedEvent += MutedChanged;
+            server.ModelChangeEvent += ModelChanged;
+            server.ExpressionChangeEvent += ExpressionChanged;
+            server.AccessoryAddEvent += AddAccessory;
+            server.AccessoryRemoveEvent += RemoveAccessory;
+        }
+
+        private void RemoveAccessory(object sender, AccessoryEventArgs e)
+        {
+            Accessories.Remove(e.AccessoryName);
+        }
+
+        private void AddAccessory(object sender, AccessoryEventArgs e)
+        {
+            Accessories.Add(e.AccessoryName);
+        }
+
+        private void ExpressionChanged(object sender, ExpressionEventArgs e)
+        {
+            Model.CurrentExpression = e.ExpressionName;
+            UpdateImage();
+        }
+
+        private void ModelChanged(object sender, ModelEventArgs e)
+        {
+            Model = PNGModelRegistry.Instance.GetModel(e.ModelName);
+            Accessories.RemoveWhere(acc => !Model.GetAccessories().Contains(acc));
+            UpdateImage();
         }
 
         private void MutedChanged(object sender, MutedEventArgs e)
@@ -82,11 +106,11 @@ namespace SimplePNGTuber
                     UpdateImage();
                     break;
                 case SettingChangeType.MIC:
-                    monitor.RecordingDevice = settings.MicDevice;
+                    monitor.RecordingDevice = Settings.Instance.MicDevice;
                     break;
                 case SettingChangeType.BACKGROUND:
-                    this.BackColor = settings.BackgroundColor;
-                    this.TransparencyKey = settings.BackgroundColor;
+                    this.BackColor = Settings.Instance.BackgroundColor;
+                    this.TransparencyKey = Settings.Instance.BackgroundColor;
                     break;
             }
         }
@@ -94,19 +118,21 @@ namespace SimplePNGTuber
         private void LoadFromSettings()
         {
             LoadModel();
-            monitor.RecordingDevice = settings.MicDevice;
-            this.BackColor = settings.BackgroundColor;
-            this.TransparencyKey = settings.BackgroundColor;
+            monitor.RecordingDevice = Settings.Instance.MicDevice;
+            this.BackColor = Settings.Instance.BackgroundColor;
+            this.TransparencyKey = Settings.Instance.BackgroundColor;
         }
 
         private void LoadModel()
         {
-            Model = PNGTuberModel.Load(settings.ModelDir, settings.ModelName);
+            Model = PNGModelRegistry.Instance.GetModel(Settings.Instance.ModelName);
             var modelSilent = Model.GetState(PNGState.SILENT, new List<string>());
-            notifyIcon.Icon = ConvertToIco(modelSilent, modelSilent.Width);
-            this.Size = new Size(modelSilent.Width, modelSilent.Height + settings.AnimationHeight);
+            Icon icon = ConvertToIco(modelSilent, modelSilent.Width);
+            notifyIcon.Icon = icon;
+            this.Icon = icon;
+            this.Size = new Size(modelSilent.Width, modelSilent.Height + Settings.Instance.AnimationHeight);
             this.pngTuberImageBox.Size = new Size(modelSilent.Width, modelSilent.Height);
-            pngTuberImageBox.Location = new Point(0, settings.AnimationHeight);
+            pngTuberImageBox.Location = new Point(0, Settings.Instance.AnimationHeight);
         }
 
         private void VoiceStateChanged(object sender, StateChangedEventArgs e)
@@ -140,7 +166,7 @@ namespace SimplePNGTuber
         {
             if(random.Next(2) == 1)
             {
-                blink += settings.BlinkFrequency;
+                blink += Settings.Instance.BlinkFrequency;
             }
             if(blink > 1)
             {
@@ -171,8 +197,8 @@ namespace SimplePNGTuber
         {
             if(animationActive)
             {
-                animationProgress += settings.AnimationSpeed;
-                pngTuberImageBox.Location = new Point(0, (int) Math.Abs(settings.AnimationHeight * Math.Sin(animationProgress)));
+                animationProgress += Settings.Instance.AnimationSpeed;
+                pngTuberImageBox.Location = new Point(0, (int) Math.Abs(Settings.Instance.AnimationHeight * Math.Sin(animationProgress)));
                 if(animationProgress >= 1)
                 {
                     animationActive = false;
@@ -230,12 +256,12 @@ namespace SimplePNGTuber
 
         private void OptionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new OptionsForm(settings, monitor).ShowDialog();
+            new OptionsForm(monitor).ShowDialog();
         }
 
         private void CreateModelToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new CreateModelForm(settings).ShowDialog();
+            new CreateModelForm().ShowDialog();
         }
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)

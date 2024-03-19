@@ -1,4 +1,4 @@
-﻿namespace SimplePNGTuber
+﻿namespace SimplePNGTuber.ModelEditor
 {
     partial class CreateModelForm
     {

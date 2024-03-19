@@ -240,16 +240,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Audio\AudioMonitor.cs" />
-    <Compile Include="CreateModelForm.cs">
+    <Compile Include="ModelEditor\CreateModelForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="CreateModelForm.Designer.cs">
+    <Compile Include="ModelEditor\CreateModelForm.Designer.cs">
       <DependentUpon>CreateModelForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ExpressionPopup.cs">
+    <Compile Include="ModelEditor\ExpressionPopup.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ExpressionPopup.Designer.cs">
+    <Compile Include="ModelEditor\ExpressionPopup.Designer.cs">
       <DependentUpon>ExpressionPopup.cs</DependentUpon>
     </Compile>
     <Compile Include="MainForm.cs">
@@ -258,13 +258,14 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="OptionsForm.cs">
+    <Compile Include="Options\OptionsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OptionsForm.Designer.cs">
+    <Compile Include="Options\OptionsForm.Designer.cs">
       <DependentUpon>OptionsForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="PNGTuberModel.cs" />
+    <Compile Include="Model\PNGModelRegistry.cs" />
+    <Compile Include="Model\PNGModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
@@ -273,17 +274,17 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Server\HttpServer.cs" />
-    <Compile Include="Settings.cs" />
-    <EmbeddedResource Include="CreateModelForm.resx">
+    <Compile Include="Options\Settings.cs" />
+    <EmbeddedResource Include="ModelEditor\CreateModelForm.resx">
       <DependentUpon>CreateModelForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ExpressionPopup.resx">
+    <EmbeddedResource Include="ModelEditor\ExpressionPopup.resx">
       <DependentUpon>ExpressionPopup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="OptionsForm.resx">
+    <EmbeddedResource Include="Options\OptionsForm.resx">
       <DependentUpon>OptionsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -319,6 +320,7 @@
   <ItemGroup>
     <None Include="Resources\diego1.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

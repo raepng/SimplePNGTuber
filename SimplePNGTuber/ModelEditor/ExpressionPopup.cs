@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SimplePNGTuber
+namespace SimplePNGTuber.ModelEditor
 {
     public partial class ExpressionPopup : Form
     {

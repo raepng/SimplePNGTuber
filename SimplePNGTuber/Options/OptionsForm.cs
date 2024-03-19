@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SimplePNGTuber.Audio;
+using SimplePNGTuber.Model;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,32 +11,30 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SimplePNGTuber
+namespace SimplePNGTuber.Options
 {
     public partial class OptionsForm : Form
     {
-        private readonly Settings settings;
         private readonly AudioMonitor monitor;
 
-        public OptionsForm(Settings settings, AudioMonitor monitor)
+        public OptionsForm(AudioMonitor monitor)
         {
             InitializeComponent();
 
-            this.settings = settings;
             this.monitor = monitor;
 
-            this.dirText.Text = settings.ModelDir;
-            this.voiceThreshold.Value = (int)(settings.VoiceThreshold * 100);
-            this.voiceSmoothing.Value = (int)(settings.VoiceSmoothing * 100);
-            this.blinkFrequency.Value = (int)(settings.BlinkFrequency * 100);
+            this.dirText.Text = Settings.Instance.ModelDir;
+            this.voiceThreshold.Value = (int)(Settings.Instance.VoiceThreshold * 100);
+            this.voiceSmoothing.Value = (int)(Settings.Instance.VoiceSmoothing * 100);
+            this.blinkFrequency.Value = (int)(Settings.Instance.BlinkFrequency * 100);
             this.micCombo.Items.Clear();
             foreach(DeviceInfo info in AudioMonitor.ListInputDevices())
             {
                 micCombo.Items.Add(info);
             }
-            micCombo.SelectedIndex = settings.MicDevice + 1;
-            bgColorPictureBox.BackColor = settings.BackgroundColor;
-            serverPort.Value = settings.ServerPort;
+            micCombo.SelectedIndex = Settings.Instance.MicDevice + 1;
+            bgColorPictureBox.BackColor = Settings.Instance.BackgroundColor;
+            serverPort.Value = Settings.Instance.ServerPort;
 
             LoadModels();
             monitor.LevelChanged += HandleLevelChanged;
@@ -59,7 +59,7 @@ namespace SimplePNGTuber
 
         private void LoadModels()
         {
-            var models = settings.GetModelNames();
+            var models = PNGModelRegistry.Instance.GetModelNames();
             modelCombo.Items.Clear();
             modelCombo.Items.AddRange(models.ToArray());
         }
@@ -72,15 +72,15 @@ namespace SimplePNGTuber
             } else
             {
                 dirText.BackColor = Color.White;
-                settings.ModelDir = dirText.Text;
+                Settings.Instance.ModelDir = dirText.Text;
                 LoadModels();
             }
         }
 
         private void OptionsForm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            settings.ServerPort = (int) serverPort.Value;
-            settings.Save();
+            Settings.Instance.ServerPort = (int) serverPort.Value;
+            Settings.Instance.Save();
         }
 
         private void OptionsForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -90,27 +90,27 @@ namespace SimplePNGTuber
 
         private void ModelCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            settings.ModelName = modelCombo.SelectedItem as string;
+            Settings.Instance.ModelName = modelCombo.SelectedItem as string;
         }
 
         private void VoiceThreshold_ValueChanged(object sender, EventArgs e)
         {
-            settings.VoiceThreshold = (double) voiceThreshold.Value / 100.0;
+            Settings.Instance.VoiceThreshold = (double) voiceThreshold.Value / 100.0;
         }
 
         private void VoiceSmoothing_ValueChanged(object sender, EventArgs e)
         {
-            settings.VoiceSmoothing = (double) voiceSmoothing.Value / 100;
+            Settings.Instance.VoiceSmoothing = (double) voiceSmoothing.Value / 100;
         }
 
         private void BlinkFrequency_ValueChanged(object sender, EventArgs e)
         {
-            settings.BlinkFrequency = (double) blinkFrequency.Value / 100.0;
+            Settings.Instance.BlinkFrequency = (double) blinkFrequency.Value / 100.0;
         }
 
         private void MicCombo_SelectedIndexChanged(object sender, EventArgs e)
         {
-            settings.MicDevice = micCombo.SelectedIndex - 1;
+            Settings.Instance.MicDevice = micCombo.SelectedIndex - 1;
         }
 
         private void SearchDirBtn_Click(object sender, EventArgs e)
@@ -127,7 +127,7 @@ namespace SimplePNGTuber
             var res = bgColorDialog.ShowDialog();
             if(res == DialogResult.OK)
             {
-                settings.BackgroundColor = bgColorDialog.Color;
+                Settings.Instance.BackgroundColor = bgColorDialog.Color;
                 bgColorPictureBox.BackColor = bgColorDialog.Color;
             }
         }

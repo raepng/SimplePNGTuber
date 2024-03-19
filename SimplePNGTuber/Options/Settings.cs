@@ -4,11 +4,16 @@ using System.IO;
 using System.Drawing;
 using System.Text.Json;
 
-namespace SimplePNGTuber
+namespace SimplePNGTuber.Options
 {
     public class Settings
     {
         private const string SettingsFile = "sptsettings.json";
+
+        private static Settings instance;
+
+        public static Settings Instance => instance ?? (instance = Settings.Load());
+
         private SettingsInternal settings;
 
         public event EventHandler<SettingChangeEventArgs> SettingChanged;
@@ -107,29 +112,12 @@ namespace SimplePNGTuber
             }
         }
 
-        public List<string> GetModelNames()
+        private Settings()
         {
-            if (string.IsNullOrEmpty(settings.modelDir))
-            {
-                return new List<string>();
-            }
-            List<string> models = new List<string>();
-            foreach (string s in Directory.EnumerateFiles(settings.modelDir))
-            {
-                if (s.EndsWith(".zip"))
-                {
-                    string name = s.Replace(".zip", "");
-                    name = name.Substring(name.LastIndexOf(Path.DirectorySeparatorChar) + 1).ToLower();
-                    if (PNGTuberModel.Load(ModelDir, name) != PNGTuberModel.Empty)
-                    {
-                        models.Add(name);
-                    }
-                }
-            }
-            return models;
+
         }
 
-        internal static Settings Load()
+        private static Settings Load()
         {
             if (File.Exists(SettingsFile))
             {

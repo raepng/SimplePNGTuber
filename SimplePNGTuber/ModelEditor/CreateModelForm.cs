@@ -1,23 +1,16 @@
-﻿using System;
+﻿using SimplePNGTuber.Model;
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace SimplePNGTuber
+namespace SimplePNGTuber.ModelEditor
 {
     public partial class CreateModelForm : Form
     {
-        private readonly Settings settings;
-
-        public CreateModelForm(Settings settings)
+        public CreateModelForm()
         {
-            this.settings = settings;
             InitializeComponent();
             expressionListBox.Items.Add(new Expression("neutral", new Image[4] { Resources.diego0, Resources.diego1, Resources.diego0, Resources.diego1 }, new string[4] { "", "", "", "" }));
         }
@@ -152,7 +145,7 @@ namespace SimplePNGTuber
             {
                 accessories.Add(acc.Substring(acc.LastIndexOf(Path.DirectorySeparatorChar) + 1, acc.LastIndexOf('.')), Image.FromFile(acc));
             }
-            PNGTuberModel.Save(settings.ModelDir, modelNameTextBox.Text, expressions, accessories);
+            PNGModelRegistry.Instance.SaveModel(modelNameTextBox.Text, expressions, accessories);
             this.Close();
         }
     }

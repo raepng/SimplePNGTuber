@@ -6,15 +6,14 @@ using System.Threading.Tasks;
 using NAudio.Utils;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
+using SimplePNGTuber.Options;
 
-namespace SimplePNGTuber
+namespace SimplePNGTuber.Audio
 {
     public class AudioMonitor
     {
 		public event EventHandler<StateChangedEventArgs> VoiceStateChanged;
 		public event EventHandler<LevelChangedEventArgs> LevelChanged;
-
-		private Settings settings;
 
 		public int RecordingDevice
 		{
@@ -44,10 +43,6 @@ namespace SimplePNGTuber
 		public bool Muted { get; set; } = false;
 		private WaveInEvent Microphone;
 
-		public AudioMonitor(Settings settings)
-        {
-			this.settings = settings;
-		}
 
         private void ProcessData(object sender, WaveInEventArgs e)
         {
@@ -61,7 +56,7 @@ namespace SimplePNGTuber
 			}
 
 			double peakPercent = peakValue / maxValue;
-			double peakPercentSmoothed = (peakPercent * (1 - settings.VoiceSmoothing)) + (previousLevel * settings.VoiceSmoothing);
+			double peakPercentSmoothed = (peakPercent * (1 - Settings.Instance.VoiceSmoothing)) + (previousLevel * Settings.Instance.VoiceSmoothing);
 			LevelChanged?.Invoke(this, new LevelChangedEventArgs() { LevelRaw = peakPercent, LevelSmoothed = peakPercentSmoothed });
 			previousLevel = peakPercentSmoothed;
 			
@@ -74,11 +69,11 @@ namespace SimplePNGTuber
 				return;
 			}
 
-			if (peakPercentSmoothed > settings.VoiceThreshold && !VoiceActive)
+			if (peakPercentSmoothed > Settings.Instance.VoiceThreshold && !VoiceActive)
             {
 				VoiceStateChanged?.Invoke(this, new StateChangedEventArgs() { VoiceActive = this.VoiceActive = true });
             }
-			else if (peakPercentSmoothed < settings.VoiceThreshold && VoiceActive)
+			else if (peakPercentSmoothed < Settings.Instance.VoiceThreshold && VoiceActive)
             {
 				VoiceStateChanged?.Invoke(this, new StateChangedEventArgs() { VoiceActive = this.VoiceActive = false });
 			}
