@@ -59,12 +59,18 @@ namespace SimplePNGTuber
 
             monitor.VoiceStateChanged += VoiceStateChanged;
             settings.SettingChanged += SettingChanged;
-
             LoadFromSettings();
             UpdateImage();
 
             server = new HttpServer(settings, this);
             server.Start();
+
+            server.MutedEvent += MutedChanged;
+        }
+
+        private void MutedChanged(object sender, MutedEventArgs e)
+        {
+            monitor.Muted = e.Muted;
         }
 
         private void SettingChanged(object sender, SettingChangeEventArgs e)

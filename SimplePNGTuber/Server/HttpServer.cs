@@ -16,6 +16,10 @@ namespace SimplePNGTuber.Server
 
         private bool runServer = false;
 
+        #region Events
+        public event EventHandler<MutedEventArgs> MutedEvent;
+        #endregion
+
         public HttpServer(Settings settings, MainForm mainForm)
         {
             this.settings = settings;
@@ -78,6 +82,7 @@ namespace SimplePNGTuber.Server
                     {
                         response = "404 Not Found";
                         resp.StatusCode = 404;
+                        resp.ContentType = "text/plain";
                     }
                 }
                 else if (req.Url.AbsolutePath.StartsWith("/addaccessory/") || req.Url.AbsolutePath.StartsWith("/removeaccessory/"))
@@ -101,19 +106,21 @@ namespace SimplePNGTuber.Server
                     {
                         response = "404 Not Found";
                         resp.StatusCode = 404;
+                        resp.ContentType = "text/plain";
                     }
+                }
+                else if (req.Url.AbsolutePath.StartsWith("/mute") || req.Url.AbsolutePath.StartsWith("/unmute"))
+                {
+                    bool mute = req.Url.AbsolutePath.StartsWith("/mute");
+                    MutedEvent?.Invoke(this, new MutedEventArgs() { Muted = mute });
+                    response = "";
+                    resp.StatusCode = 200;
                 }
                 else
                 {
-                    var modelNames = settings.GetModelNames();
-
-                    string json = "[";
-                    foreach (var modelName in modelNames)
-                    {
-                        json += "\"" + modelName + "\", ";
-                    }
-                    response = json.Substring(0, json.Length - 2) + "]";
-                    resp.ContentType = "application/json";
+                    response = "400 Bad Request";
+                    resp.StatusCode = 400;
+                    resp.ContentType = "text/plain";
                 }
 
                 byte[] data = Encoding.UTF8.GetBytes(response);
@@ -143,5 +150,10 @@ namespace SimplePNGTuber.Server
             runServer = false;
             listener.Close();
         }
+    }
+
+    public class MutedEventArgs : EventArgs
+    {
+        public bool Muted { get; set; }
     }
 }

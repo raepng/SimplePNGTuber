@@ -40,6 +40,8 @@ namespace SimplePNGTuber
 
 		private double previousLevel = 0;
         private bool VoiceActive = false;
+		/// <summary>Used to prevent the model from talking if desired</summary>
+		public bool Muted { get; set; } = false;
 		private WaveInEvent Microphone;
 
 		public AudioMonitor(Settings settings)
@@ -62,11 +64,21 @@ namespace SimplePNGTuber
 			double peakPercentSmoothed = (peakPercent * (1 - settings.VoiceSmoothing)) + (previousLevel * settings.VoiceSmoothing);
 			LevelChanged?.Invoke(this, new LevelChangedEventArgs() { LevelRaw = peakPercent, LevelSmoothed = peakPercentSmoothed });
 			previousLevel = peakPercentSmoothed;
-			if(peakPercentSmoothed > settings.VoiceThreshold && !VoiceActive)
+			
+			if (Muted)
+			{
+				if (VoiceActive)
+				{
+                    VoiceStateChanged?.Invoke(this, new StateChangedEventArgs() { VoiceActive = this.VoiceActive = false });
+                }
+				return;
+			}
+
+			if (peakPercentSmoothed > settings.VoiceThreshold && !VoiceActive)
             {
 				VoiceStateChanged?.Invoke(this, new StateChangedEventArgs() { VoiceActive = this.VoiceActive = true });
             }
-			else if(peakPercentSmoothed < settings.VoiceThreshold && VoiceActive)
+			else if (peakPercentSmoothed < settings.VoiceThreshold && VoiceActive)
             {
 				VoiceStateChanged?.Invoke(this, new StateChangedEventArgs() { VoiceActive = this.VoiceActive = false });
 			}
