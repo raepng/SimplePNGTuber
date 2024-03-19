@@ -24,7 +24,15 @@ namespace SimplePNGTuber.Model
 
         private PNGModelRegistry()
         {
+            Settings.Instance.SettingChanged += HandleSettingChanged;
+        }
 
+        private void HandleSettingChanged(object sender, SettingChangeEventArgs e)
+        {
+            if(e.ChangeType == SettingChangeType.MODELDIR)
+            {
+                LoadModels();
+            }
         }
 
         public void LoadModels()

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Drawing;
 using System.Text.Json;
@@ -23,7 +22,7 @@ namespace SimplePNGTuber.Options
             set
             {
                 settings.modelDir = value;
-                SettingChanged?.Invoke(this, new SettingChangeEventArgs() { ChangeType = SettingChangeType.MODEL });
+                SettingChanged?.Invoke(this, new SettingChangeEventArgs() { ChangeType = SettingChangeType.MODELDIR });
             }
         }
         public string ModelName
@@ -180,6 +179,7 @@ namespace SimplePNGTuber.Options
     public enum SettingChangeType
     {
         MODEL,
+        MODELDIR,
         VOICE,
         MIC,
         BLINK,
