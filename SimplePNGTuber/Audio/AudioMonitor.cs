@@ -65,7 +65,14 @@ namespace SimplePNGTuber
 			LevelChanged?.Invoke(this, new LevelChangedEventArgs() { LevelRaw = peakPercent, LevelSmoothed = peakPercentSmoothed });
 			previousLevel = peakPercentSmoothed;
 			
-			if (Muted) return;
+			if (Muted)
+			{
+				if (VoiceActive)
+				{
+                    VoiceStateChanged?.Invoke(this, new StateChangedEventArgs() { VoiceActive = this.VoiceActive = false });
+                }
+				return;
+			}
 
 			if (peakPercentSmoothed > settings.VoiceThreshold && !VoiceActive)
             {

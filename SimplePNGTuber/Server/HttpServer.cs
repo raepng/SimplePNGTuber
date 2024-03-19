@@ -82,6 +82,7 @@ namespace SimplePNGTuber.Server
                     {
                         response = "404 Not Found";
                         resp.StatusCode = 404;
+                        resp.ContentType = "text/plain";
                     }
                 }
                 else if (req.Url.AbsolutePath.StartsWith("/addaccessory/") || req.Url.AbsolutePath.StartsWith("/removeaccessory/"))
@@ -105,6 +106,7 @@ namespace SimplePNGTuber.Server
                     {
                         response = "404 Not Found";
                         resp.StatusCode = 404;
+                        resp.ContentType = "text/plain";
                     }
                 }
                 else if (req.Url.AbsolutePath.StartsWith("/mute") || req.Url.AbsolutePath.StartsWith("/unmute"))
@@ -116,15 +118,9 @@ namespace SimplePNGTuber.Server
                 }
                 else
                 {
-                    var modelNames = settings.GetModelNames();
-
-                    string json = "[";
-                    foreach (var modelName in modelNames)
-                    {
-                        json += "\"" + modelName + "\", ";
-                    }
-                    response = json.Substring(0, json.Length - 2) + "]";
-                    resp.ContentType = "application/json";
+                    response = "400 Bad Request";
+                    resp.StatusCode = 400;
+                    resp.ContentType = "text/plain";
                 }
 
                 byte[] data = Encoding.UTF8.GetBytes(response);
