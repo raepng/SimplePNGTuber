@@ -16,6 +16,10 @@ namespace SimplePNGTuber.Server
 
         private bool runServer = false;
 
+        #region Events
+        public event EventHandler<MutedEventArgs> MutedEvent;
+        #endregion
+
         public HttpServer(Settings settings, MainForm mainForm)
         {
             this.settings = settings;
@@ -103,6 +107,13 @@ namespace SimplePNGTuber.Server
                         resp.StatusCode = 404;
                     }
                 }
+                else if (req.Url.AbsolutePath.StartsWith("/mute") || req.Url.AbsolutePath.StartsWith("/unmute"))
+                {
+                    bool mute = req.Url.AbsolutePath.StartsWith("/mute");
+                    MutedEvent?.Invoke(this, new MutedEventArgs() { Muted = mute });
+                    response = "";
+                    resp.StatusCode = 200;
+                }
                 else
                 {
                     var modelNames = settings.GetModelNames();
@@ -143,5 +154,10 @@ namespace SimplePNGTuber.Server
             runServer = false;
             listener.Close();
         }
+    }
+
+    public class MutedEventArgs : EventArgs
+    {
+        public bool Muted { get; set; }
     }
 }
