@@ -240,11 +240,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Audio\AudioMonitor.cs" />
-    <Compile Include="ModelEditor\CreateModelForm.cs">
+    <Compile Include="ModelEditor\EditModelForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ModelEditor\CreateModelForm.Designer.cs">
-      <DependentUpon>CreateModelForm.cs</DependentUpon>
+    <Compile Include="ModelEditor\EditModelForm.Designer.cs">
+      <DependentUpon>EditModelForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ModelEditor\ExpressionPopup.cs">
       <SubType>Form</SubType>
@@ -275,8 +275,8 @@
     </Compile>
     <Compile Include="Server\HttpServer.cs" />
     <Compile Include="Options\Settings.cs" />
-    <EmbeddedResource Include="ModelEditor\CreateModelForm.resx">
-      <DependentUpon>CreateModelForm.cs</DependentUpon>
+    <EmbeddedResource Include="ModelEditor\EditModelForm.resx">
+      <DependentUpon>EditModelForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ModelEditor\ExpressionPopup.resx">
       <DependentUpon>ExpressionPopup.cs</DependentUpon>

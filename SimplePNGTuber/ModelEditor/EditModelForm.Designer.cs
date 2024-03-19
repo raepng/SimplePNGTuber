@@ -1,6 +1,6 @@
 ﻿namespace SimplePNGTuber.ModelEditor
 {
-    partial class CreateModelForm
+    partial class EditModelForm
     {
         /// <summary>
         /// Required designer variable.
@@ -275,15 +275,16 @@
             this.accessoryFileDialog.FileName = "accessory.png";
             this.accessoryFileDialog.Filter = "PNG Files|*.png";
             // 
-            // CreateModelForm
+            // EditModelForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.tableLayoutPanel1);
-            this.Name = "CreateModelForm";
-            this.Text = "Create new Model";
+            this.Name = "EditModelForm";
+            this.Text = "Edit Model";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EditModelForm_FormClosing);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.tableLayoutPanel1.PerformLayout();
             this.tableLayoutPanel2.ResumeLayout(false);

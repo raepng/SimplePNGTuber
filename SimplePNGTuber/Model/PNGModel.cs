@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
-using System.IO.Compression;
 using System.Linq;
 
 namespace SimplePNGTuber.Model
@@ -12,8 +10,8 @@ namespace SimplePNGTuber.Model
         public readonly string Name;
         public string CurrentExpression { get; set; } = "neutral";
 
-        private Dictionary<string, Image[]> expressions;
-        private Dictionary<string, Image> accessories;
+        internal Dictionary<string, Image[]> expressions;
+        internal Dictionary<string, Image> accessories;
 
         public PNGModel(string name, Dictionary<string, Image[]> expressions, Dictionary<string, Image> accessories)
         {

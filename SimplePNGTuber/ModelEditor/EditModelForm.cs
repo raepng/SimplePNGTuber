@@ -1,18 +1,51 @@
 ﻿using SimplePNGTuber.Model;
+using SimplePNGTuber.Options;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace SimplePNGTuber.ModelEditor
 {
-    public partial class CreateModelForm : Form
+    public partial class EditModelForm : Form
     {
-        public CreateModelForm()
+        string editTmpFolder = Settings.Instance.ModelDir + Path.DirectorySeparatorChar + "modelEditorTmp" + Path.DirectorySeparatorChar;
+
+        public EditModelForm()
         {
             InitializeComponent();
             expressionListBox.Items.Add(new Expression("neutral", new Image[4] { Resources.diego0, Resources.diego1, Resources.diego0, Resources.diego1 }, new string[4] { "", "", "", "" }));
+        }
+
+        public EditModelForm(PNGModel model)
+        {
+            InitializeComponent();
+            PopulateForm(model);
+        }
+
+        private void PopulateForm(PNGModel model)
+        {
+            modelNameTextBox.Text = model.Name;
+            Directory.CreateDirectory(editTmpFolder);
+            foreach (var exp in model.expressions)
+            {
+                string[] imageLocations = new string[4];
+                for(int i = 0; i < imageLocations.Length; i++)
+                {
+                    string imgLoc = editTmpFolder + "exp_" + exp.Key + "_" + i + ".png";
+                    exp.Value[i].Save(imgLoc);
+                    imageLocations[i] = imgLoc;
+                }
+                expressionListBox.Items.Add(new Expression(exp.Key, exp.Value, imageLocations));
+            }
+            foreach(var acc in model.accessories)
+            {
+                string imgLoc = editTmpFolder + "acc_" + acc.Key + ".png";
+                acc.Value.Save(imgLoc);
+                accessoryListBox.Items.Add(imgLoc);
+            }
         }
 
         private void ExpressionListBox_SelectedIndexChanged(object sender, EventArgs e)
@@ -120,8 +153,7 @@ namespace SimplePNGTuber.ModelEditor
                 modelNameTextBox.Text.Contains("\\") ||
                 modelNameTextBox.Text.Contains("|") ||
                 modelNameTextBox.Text.Contains("?") ||
-                modelNameTextBox.Text.Contains("*") ||
-                modelNameTextBox.Text.Contains("_"))
+                modelNameTextBox.Text.Contains("*"))
             {
                 modelNameTextBox.BackColor = Color.Red;
                 saveBtn.Enabled = false;
@@ -143,10 +175,38 @@ namespace SimplePNGTuber.ModelEditor
             Dictionary<string, Image> accessories = new Dictionary<string, Image>();
             foreach(string acc in accessoryListBox.Items)
             {
-                accessories.Add(acc.Substring(acc.LastIndexOf(Path.DirectorySeparatorChar) + 1, acc.LastIndexOf('.')), Image.FromFile(acc));
+                string accName = acc.Substring(acc.LastIndexOf(Path.DirectorySeparatorChar) + 1);
+                accName = accName.Substring(0, accName.LastIndexOf('.'));
+                accessories.Add(accName, Image.FromFile(acc));
             }
-            PNGModelRegistry.Instance.SaveModel(modelNameTextBox.Text, expressions, accessories);
-            this.Close();
+            if (PNGModelRegistry.Instance.SaveModel(modelNameTextBox.Text, expressions, accessories))
+            {
+                this.Close();
+            }
+        }
+
+        private void EditModelForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            Thread thread = new Thread(DeleteEditTmpFolder);
+            thread.Start();
+        }
+
+        private void DeleteEditTmpFolder()
+        {
+            bool deleted = false;
+            while(!deleted)
+            {
+                try
+                {
+                    Directory.Delete(editTmpFolder, true);
+                    deleted = true;
+                }
+                catch (Exception)
+                {
+                    deleted = false;
+                    Thread.Sleep(1000);
+                }
+            }
         }
     }
 

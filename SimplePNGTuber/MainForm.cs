@@ -261,7 +261,12 @@ namespace SimplePNGTuber
 
         private void CreateModelToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new CreateModelForm().ShowDialog();
+            new EditModelForm().ShowDialog();
+        }
+
+        private void EditCurrentModelToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            new EditModelForm(Model).ShowDialog();
         }
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)

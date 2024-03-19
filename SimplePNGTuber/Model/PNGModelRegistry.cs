@@ -7,6 +7,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace SimplePNGTuber.Model
 {
@@ -104,7 +105,7 @@ namespace SimplePNGTuber.Model
             }
         }
 
-        public void SaveModel(string name, Dictionary<string, Image[]> expressions, Dictionary<string, Image> accessories)
+        public bool SaveModel(string name, Dictionary<string, Image[]> expressions, Dictionary<string, Image> accessories)
         {
             string tmpDir = Settings.Instance.ModelDir + "/modelTmp";
             Directory.CreateDirectory(tmpDir);
@@ -120,8 +121,17 @@ namespace SimplePNGTuber.Model
             {
                 accessories[accName].Save(tmpDir + "/" + AccessoryPrefix + accName + ".png");
             }
-            ZipFile.CreateFromDirectory(tmpDir, Settings.Instance.ModelDir + "/" + name + ModelFileExtension);
+
+            string modelFile = Settings.Instance.ModelDir + "/" + name + ModelFileExtension;
+            bool saved = false;
+            if(!File.Exists(modelFile) || MessageBox.Show("Model already exists. Overwrite?", "Save Model", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                File.Delete(modelFile);
+                ZipFile.CreateFromDirectory(tmpDir, modelFile);
+                saved = true;
+            }
             Directory.Delete(tmpDir, true);
+            return saved;
         }
     }
 }
