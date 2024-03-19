@@ -16,5 +16,4 @@ Accessory files are prefixed with `acc_`:
 acc_flowers.png
 ```
 ---
-Please note that this software is just a fun project. There are plans for adding a "Create Model"-Dialogue that lets you easily select your images for the expressions and accessories you want to have.
-It is also planned to add some audio filters to the microphone capture to improve voice capture and reduce the picking up of background noises.
+Please note that this software is just a fun project. It is planned to do some refactoring and cleaning up of the code to improve stability and maintainability. Also some documentation for the http interface is still needed.
