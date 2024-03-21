@@ -6,6 +6,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -73,6 +74,7 @@ namespace SimplePNGTuber.Model
             {
                 var expressions = new Dictionary<string, Image[]>();
                 var accessories = new Dictionary<string, Image>();
+                var modelSettings = new PNGModelSettings();
                 using (ZipArchive zip = ZipFile.OpenRead(Settings.Instance.ModelDir + "/" + name + ModelFileExtension))
                 {
                     foreach (ZipArchiveEntry entry in zip.Entries)
@@ -102,9 +104,24 @@ namespace SimplePNGTuber.Model
                                 }
                             }
                         }
+                        else if(entry.Name.Equals("settings.json"))
+                        {
+                            using (var stream = entry.Open())
+                            {
+                                modelSettings = JsonSerializer.Deserialize<PNGModelSettings>(stream);
+                            }
+                        }
                     }
                 }
-                PNGModel model = new PNGModel(name, expressions, accessories);
+                var accessoriesByLayer = new Dictionary<string, Accessory>();
+                foreach (var accessory in accessories)
+                {
+                    if(modelSettings.AccessoryLayers.ContainsKey(accessory.Key))
+                    {
+                        accessoriesByLayer.Add(accessory.Key, new Accessory() { Name = accessory.Key, Image = new LayeredImage() { Image = accessory.Value, Layer = modelSettings.AccessoryLayers[accessory.Key] } });
+                    }
+                }
+                PNGModel model = new PNGModel(name, modelSettings, expressions, accessoriesByLayer);
                 return model;
             }
             catch (Exception)
@@ -113,7 +130,7 @@ namespace SimplePNGTuber.Model
             }
         }
 
-        public bool SaveModel(string name, Dictionary<string, Image[]> expressions, Dictionary<string, Image> accessories)
+        public bool SaveModel(string name, PNGModelSettings settings, Dictionary<string, Image[]> expressions, Dictionary<string, Image> accessories)
         {
             string tmpDir = Settings.Instance.ModelDir + "/modelTmp";
             Directory.CreateDirectory(tmpDir);
@@ -129,6 +146,9 @@ namespace SimplePNGTuber.Model
             {
                 accessories[accName].Save(tmpDir + "/" + AccessoryPrefix + accName + ".png");
             }
+
+            var settingsString = JsonSerializer.Serialize(settings);
+            File.WriteAllText(tmpDir + "/settings.json", settingsString);
 
             string modelFile = Settings.Instance.ModelDir + "/" + name + ModelFileExtension;
             bool saved = false;

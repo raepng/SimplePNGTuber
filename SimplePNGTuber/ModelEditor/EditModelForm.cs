@@ -16,7 +16,7 @@ namespace SimplePNGTuber.ModelEditor
         public EditModelForm()
         {
             InitializeComponent();
-            expressionListBox.Items.Add(new Expression("neutral", new Image[4] { Resources.diego0, Resources.diego1, Resources.diego0, Resources.diego1 }, new string[4] { "", "", "", "" }));
+            expressionListBox.Items.Add(new EditExpression("neutral", new Image[4] { Resources.diego0, Resources.diego1, Resources.diego0, Resources.diego1 }, new string[4] { "", "", "", "" }));
         }
 
         public EditModelForm(PNGModel model)
@@ -38,13 +38,13 @@ namespace SimplePNGTuber.ModelEditor
                     exp.Value[i].Save(imgLoc);
                     imageLocations[i] = imgLoc;
                 }
-                expressionListBox.Items.Add(new Expression(exp.Key, exp.Value, imageLocations));
+                expressionListBox.Items.Add(new EditExpression(exp.Key, exp.Value, imageLocations));
             }
             foreach(var acc in model.accessories)
             {
-                string imgLoc = editTmpFolder + "acc_" + acc.Key + ".png";
-                acc.Value.Save(imgLoc);
-                accessoryListBox.Items.Add(imgLoc);
+                string imgLoc = editTmpFolder + acc.Key + ".png";
+                acc.Value.Image.Image.Save(imgLoc);
+                accessoryListBox.Items.Add(new EditAccessory(acc.Value.Name, acc.Value.Image.Image, acc.Value.Image.Layer, imgLoc));
             }
         }
 
@@ -52,7 +52,7 @@ namespace SimplePNGTuber.ModelEditor
         {
             if(expressionListBox.SelectedIndex >= 0)
             {
-                if(((Expression)expressionListBox.SelectedItem).Name.Equals("neutral"))
+                if(((EditExpression)expressionListBox.SelectedItem).Name.Equals("neutral"))
                 {
                     removeExpButton.Enabled = false;
                 }
@@ -60,7 +60,7 @@ namespace SimplePNGTuber.ModelEditor
                 {
                     removeExpButton.Enabled = true;
                 }
-                previewPictureBox.Image = ((Expression)expressionListBox.SelectedItem).Images[0];
+                previewPictureBox.Image = ((EditExpression)expressionListBox.SelectedItem).Images[0];
                 previewPictureBox.Size = previewPictureBox.Image.Size;
             }
             else
@@ -71,7 +71,7 @@ namespace SimplePNGTuber.ModelEditor
 
         private void AddExpButton_Click(object sender, EventArgs e)
         {
-            ExpressionPopup expressionPopup = new ExpressionPopup(Expression.Empty);
+            ExpressionPopup expressionPopup = new ExpressionPopup(EditExpression.Empty);
             expressionPopup.ShowDialog();
             AddExpression(expressionPopup);
         }
@@ -89,7 +89,7 @@ namespace SimplePNGTuber.ModelEditor
             }
             else
             {
-                ExpressionPopup expressionPopup = new ExpressionPopup((Expression) expressionListBox.SelectedItem);
+                ExpressionPopup expressionPopup = new ExpressionPopup((EditExpression) expressionListBox.SelectedItem);
                 expressionPopup.ShowDialog();
                 expressionListBox.Items.RemoveAt(expressionListBox.SelectedIndex);
                 AddExpression(expressionPopup);
@@ -98,7 +98,7 @@ namespace SimplePNGTuber.ModelEditor
 
         private void AddExpression(ExpressionPopup expressionPopup)
         {
-            foreach (Expression expression in expressionListBox.Items)
+            foreach (EditExpression expression in expressionListBox.Items)
             {
                 if (expression.Name.Equals(expressionPopup.ExpressionName))
                 {
@@ -106,16 +106,27 @@ namespace SimplePNGTuber.ModelEditor
                     return;
                 }
             }
-            expressionListBox.Items.Add(new Expression(expressionPopup.ExpressionName, expressionPopup.Images, expressionPopup.ImageLocations));
+            expressionListBox.Items.Add(new EditExpression(expressionPopup.ExpressionName, expressionPopup.Images, expressionPopup.ImageLocations));
         }
 
         private void AddAccButton_Click(object sender, EventArgs e)
         {
-            var res = accessoryFileDialog.ShowDialog();
-            if(res == DialogResult.OK)
+            AccessoryPopup popup = new AccessoryPopup();
+            popup.ShowDialog();
+            AddAccessory(popup);
+        }
+
+        private void AddAccessory(AccessoryPopup accPopup)
+        {
+            foreach (EditAccessory accessory in accessoryListBox.Items)
             {
-                accessoryListBox.Items.Add(accessoryFileDialog.FileName);
+                if (accessory.Name.Equals(accPopup.AccessoryName))
+                {
+                    MessageBox.Show("Expression name already in use!");
+                    return;
+                }
             }
+            accessoryListBox.Items.Add(new EditAccessory(accPopup.AccessoryName, accPopup.Image, accPopup.Layer, accPopup.ImageLocation));
         }
 
         private void RemoveAccButton_Click(object sender, EventArgs e)
@@ -130,7 +141,7 @@ namespace SimplePNGTuber.ModelEditor
         {
             if(accessoryListBox.SelectedIndex >= 0)
             {
-                previewPictureBox.Image = Image.FromFile((string) accessoryListBox.SelectedItem);
+                previewPictureBox.Image = ((EditAccessory) accessoryListBox.SelectedItem).Image;
                 previewPictureBox.Size = previewPictureBox.Image.Size;
                 removeAccButton.Enabled = true;
             }
@@ -167,19 +178,19 @@ namespace SimplePNGTuber.ModelEditor
 
         private void SaveBtn_Click(object sender, EventArgs e)
         {
-            Dictionary<string, Image[]> expressions = new Dictionary<string, Image[]>();
-            foreach(Expression exp in expressionListBox.Items)
+            var expressions = new Dictionary<string, Image[]>();
+            foreach(EditExpression exp in expressionListBox.Items)
             {
                 expressions.Add(exp.Name, exp.Images);
             }
-            Dictionary<string, Image> accessories = new Dictionary<string, Image>();
-            foreach(string acc in accessoryListBox.Items)
+            var accessories = new Dictionary<string, Image>();
+            var settings = new PNGModelSettings();
+            foreach(EditAccessory acc in accessoryListBox.Items)
             {
-                string accName = acc.Substring(acc.LastIndexOf(Path.DirectorySeparatorChar) + 1);
-                accName = accName.Substring(0, accName.LastIndexOf('.'));
-                accessories.Add(accName, Image.FromFile(acc));
+                accessories.Add(acc.Name, acc.Image);
+                settings.AccessoryLayers.Add(acc.Name, acc.Layer);
             }
-            if (PNGModelRegistry.Instance.SaveModel(modelNameTextBox.Text, expressions, accessories))
+            if (PNGModelRegistry.Instance.SaveModel(modelNameTextBox.Text, settings, expressions, accessories))
             {
                 this.Close();
             }
@@ -210,9 +221,9 @@ namespace SimplePNGTuber.ModelEditor
         }
     }
 
-    public struct Expression
+    public struct EditExpression
     {
-        internal static readonly Expression Empty = new Expression("",
+        internal static readonly EditExpression Empty = new EditExpression("",
             new Image[4] { Resources.diego0, Resources.diego1, Resources.diego0, Resources.diego1 },
             new string[4] { "", "", "", "" });
 
@@ -220,11 +231,32 @@ namespace SimplePNGTuber.ModelEditor
         public Image[] Images;
         public string[] ImageLocations;
 
-        public Expression(string name, Image[] images, string[] imageLocations)
+        public EditExpression(string name, Image[] images, string[] imageLocations)
         {
             this.Name = name;
             this.Images = images;
             this.ImageLocations = imageLocations;
+        }
+
+        public override string ToString()
+        {
+            return Name;
+        }
+    }
+
+    public struct EditAccessory
+    {
+        public string Name;
+        public Image Image;
+        public int Layer;
+        public string ImageLocation;
+
+        public EditAccessory(string name, Image image, int layer, string imageLocation)
+        {
+            this.Name = name;
+            this.Image = image;
+            this.Layer = layer;
+            this.ImageLocation = imageLocation;
         }
 
         public override string ToString()

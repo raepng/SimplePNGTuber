@@ -10,12 +10,14 @@ namespace SimplePNGTuber.Model
         public readonly string Name;
         public string CurrentExpression { get; set; } = "neutral";
 
+        internal PNGModelSettings Settings;
         internal Dictionary<string, Image[]> expressions;
-        internal Dictionary<string, Image> accessories;
+        internal Dictionary<string, Accessory> accessories;
 
-        public PNGModel(string name, Dictionary<string, Image[]> expressions, Dictionary<string, Image> accessories)
+        public PNGModel(string name, PNGModelSettings settings, Dictionary<string, Image[]> expressions, Dictionary<string, Accessory> accessories)
         {
             this.Name = name;
+            this.Settings = settings;
             this.expressions = expressions;
             this.accessories = accessories;
         }
@@ -53,15 +55,25 @@ namespace SimplePNGTuber.Model
             }
             try
             {
-                Image copy = (Image)res.Clone();
+                var images = new HashSet<LayeredImage>();
+                images.Add(new LayeredImage() { Layer = 0, Image = res });
+                foreach (string key in activeAccessories)
+                {
+                    if (accessories.ContainsKey(key))
+                    {
+                        images.Add(accessories[key].Image);
+                    }
+                }
+
+                var enumerator = images.OrderBy(image => image.Layer).GetEnumerator();
+                enumerator.MoveNext();
+
+                Image copy = (Image) enumerator.Current.Image.Clone();
                 using (Graphics canvas = Graphics.FromImage(copy))
                 {
-                    foreach (string key in activeAccessories)
+                    while(enumerator.MoveNext())
                     {
-                        if (accessories.ContainsKey(key))
-                        {
-                            canvas.DrawImage(accessories[key], 0, 0);
-                        }
+                        canvas.DrawImage(enumerator.Current.Image, 0, 0, copy.Width, copy.Height);
                     }
                     canvas.Save();
                 }
@@ -75,12 +87,30 @@ namespace SimplePNGTuber.Model
 
         public static readonly PNGModel Empty = new PNGModel(
             "empty",
+            new PNGModelSettings(),
             new Dictionary<string, Image[]>()
             {
                 { "neutral", new Image[] { Resources.diego0, Resources.diego1, Resources.diego0, Resources.diego1 } }
             },
-            new Dictionary<string, Image>()
+            new Dictionary<string, Accessory>()
         );
+    }
+
+    public struct LayeredImage
+    {
+        public int Layer;
+        public Image Image;
+    }
+
+    public struct Accessory
+    {
+        public string Name;
+        public LayeredImage Image;
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 
     public enum PNGState
