@@ -264,6 +264,9 @@
     <Compile Include="MainForm.Designer.cs">
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Model\Endpoints\AddRemoveAccessoryEndpoint.cs" />
+    <Compile Include="Model\Endpoints\MuteEndpoint.cs" />
+    <Compile Include="Model\Endpoints\SetExpressionEndpoint.cs" />
     <Compile Include="Model\PNGModelSettings.cs" />
     <Compile Include="Options\OptionsForm.cs">
       <SubType>Form</SubType>
@@ -280,8 +283,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Model\Endpoints\SetModelEndpoint.cs" />
     <Compile Include="Server\HttpServer.cs" />
     <Compile Include="Options\Settings.cs" />
+    <Compile Include="Server\HttpServerUtil.cs" />
     <EmbeddedResource Include="ModelEditor\AccessoryPopup.resx">
       <DependentUpon>AccessoryPopup.cs</DependentUpon>
     </EmbeddedResource>

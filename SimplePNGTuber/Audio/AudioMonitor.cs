@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using NAudio.Utils;
 using NAudio.Wave;
 using NAudio.Wave.SampleProviders;
+using SimplePNGTuber.Model;
 using SimplePNGTuber.Options;
 
 namespace SimplePNGTuber.Audio
@@ -39,8 +40,6 @@ namespace SimplePNGTuber.Audio
 
 		private double previousLevel = 0;
         private bool VoiceActive = false;
-		/// <summary>Used to prevent the model from talking if desired</summary>
-		public bool Muted { get; set; } = false;
 		private WaveInEvent Microphone;
 
 
@@ -60,7 +59,7 @@ namespace SimplePNGTuber.Audio
 			LevelChanged?.Invoke(this, new LevelChangedEventArgs() { LevelRaw = peakPercent, LevelSmoothed = peakPercentSmoothed });
 			previousLevel = peakPercentSmoothed;
 			
-			if (Muted)
+			if (PNGModelRegistry.Instance.Muted)
 			{
 				if (VoiceActive)
 				{

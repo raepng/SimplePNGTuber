@@ -13,6 +13,7 @@ namespace SimplePNGTuber.Model
         internal PNGModelSettings Settings;
         internal Dictionary<string, Image[]> expressions;
         internal Dictionary<string, Accessory> accessories;
+        internal HashSet<string> activeAccessories = new HashSet<string>();
 
         public PNGModel(string name, PNGModelSettings settings, Dictionary<string, Image[]> expressions, Dictionary<string, Accessory> accessories)
         {
@@ -32,7 +33,19 @@ namespace SimplePNGTuber.Model
             return accessories.Keys.ToList();
         }
 
-        public Image GetState(PNGState state, IEnumerable<string> activeAccessories)
+        public void SetAccessoryActive(string accessory, bool active)
+        {
+            if (active)
+            {
+                activeAccessories.Add(accessory);
+            }
+            else
+            {
+                activeAccessories.Remove(accessory);
+            }
+        }
+
+        public Image GetState(PNGState state)
         {
             Image res = null;
             switch (state)

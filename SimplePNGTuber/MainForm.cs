@@ -4,7 +4,6 @@ using SimplePNGTuber.ModelEditor;
 using SimplePNGTuber.Options;
 using SimplePNGTuber.Server;
 using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -26,7 +25,6 @@ namespace SimplePNGTuber
 
         private readonly Random random = new Random();
         private readonly AudioMonitor monitor;
-        private readonly HttpServer server;
 
 
         private PNGState state = PNGState.SILENT;
@@ -46,8 +44,6 @@ namespace SimplePNGTuber
             }
         }
 
-        public HashSet<string> Accessories { get; } = new HashSet<string>();
-
         public MainForm()
         {
             InitializeComponent();
@@ -58,61 +54,28 @@ namespace SimplePNGTuber
             Settings.Instance.SettingChanged += SettingChanged;
             LoadFromSettings();
             UpdateImage();
-
-            server = new HttpServer(this);
-            server.Start();
-
-            server.MutedEvent += MutedChanged;
-            server.ModelChangeEvent += ModelChanged;
-            server.ExpressionChangeEvent += ExpressionChanged;
-            server.AccessoryAddEvent += AddAccessory;
-            server.AccessoryRemoveEvent += RemoveAccessory;
-        }
-
-        private void RemoveAccessory(object sender, AccessoryEventArgs e)
-        {
-            Accessories.Remove(e.AccessoryName);
-        }
-
-        private void AddAccessory(object sender, AccessoryEventArgs e)
-        {
-            Accessories.Add(e.AccessoryName);
-        }
-
-        private void ExpressionChanged(object sender, ExpressionEventArgs e)
-        {
-            Model.CurrentExpression = e.ExpressionName;
-            UpdateImage();
-        }
-
-        private void ModelChanged(object sender, ModelEventArgs e)
-        {
-            Model = PNGModelRegistry.Instance.GetModel(e.ModelName);
-            Accessories.RemoveWhere(acc => !Model.GetAccessories().Contains(acc));
-            UpdateImage();
-        }
-
-        private void MutedChanged(object sender, MutedEventArgs e)
-        {
-            monitor.Muted = e.Muted;
         }
 
         private void SettingChanged(object sender, SettingChangeEventArgs e)
         {
-            switch (e.ChangeType)
+            Action action = () =>
             {
-                case SettingChangeType.MODEL:
-                    LoadModel();
-                    UpdateImage();
-                    break;
-                case SettingChangeType.MIC:
-                    monitor.RecordingDevice = Settings.Instance.MicDevice;
-                    break;
-                case SettingChangeType.BACKGROUND:
-                    this.BackColor = Settings.Instance.BackgroundColor;
-                    this.TransparencyKey = Settings.Instance.BackgroundColor;
-                    break;
-            }
+                switch (e.ChangeType)
+                {
+                    case SettingChangeType.MODEL:
+                        LoadModel();
+                        UpdateImage();
+                        break;
+                    case SettingChangeType.MIC:
+                        monitor.RecordingDevice = Settings.Instance.MicDevice;
+                        break;
+                    case SettingChangeType.BACKGROUND:
+                        this.BackColor = Settings.Instance.BackgroundColor;
+                        this.TransparencyKey = Settings.Instance.BackgroundColor;
+                        break;
+                }
+            };
+            this.Invoke(action);
         }
 
         private void LoadFromSettings()
@@ -126,7 +89,7 @@ namespace SimplePNGTuber
         private void LoadModel()
         {
             Model = PNGModelRegistry.Instance.GetModel(Settings.Instance.ModelName);
-            var modelSilent = Model.GetState(PNGState.SILENT, new List<string>());
+            var modelSilent = Model.GetState(PNGState.SILENT);
             Icon icon = ConvertToIco(modelSilent, modelSilent.Width);
             notifyIcon.Icon = icon;
             this.Icon = icon;
@@ -209,7 +172,7 @@ namespace SimplePNGTuber
 
         private void UpdateImage()
         {
-            pngTuberImageBox.BackgroundImage = Model.GetState(state, Accessories);
+            pngTuberImageBox.BackgroundImage = Model.GetState(state);
         }
 
         private void PngTuberImageBox_MouseDown(object sender, MouseEventArgs e)
@@ -271,7 +234,7 @@ namespace SimplePNGTuber
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            server.Stop();
+            HttpServer.Instance.Stop();
             Application.Exit();
         }
     }

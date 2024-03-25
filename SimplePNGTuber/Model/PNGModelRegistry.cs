@@ -1,14 +1,13 @@
 ﻿using SimplePNGTuber.Options;
+using SimplePNGTuber.Server;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.IO.Compression;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using SimplePNGTuber.Model.Endpoints;
 
 namespace SimplePNGTuber.Model
 {
@@ -23,9 +22,55 @@ namespace SimplePNGTuber.Model
 
         private Dictionary<string, PNGModel> models = new Dictionary<string, PNGModel>();
 
+        public PNGModel ActiveModel { get; private set; } = PNGModel.Empty;
+
+        public bool Muted { get; private set; }
+
         private PNGModelRegistry()
         {
             Settings.Instance.SettingChanged += HandleSettingChanged;
+
+            SetModelEndpoint setModelEndpoint = new SetModelEndpoint();
+            HttpServer.Instance.AddEndpoint("/setmodel/", setModelEndpoint);
+            setModelEndpoint.ModelChangeEvent += ModelChanged;
+
+            SetExpressionEndpoint setExpressionEndpoint = new SetExpressionEndpoint();
+            HttpServer.Instance.AddEndpoint("/setexpression/", setModelEndpoint);
+            setExpressionEndpoint.ExpressionChangeEvent += ExpressionChanged;
+
+            AddRemoveAccessoryEndpoint accessoryEndpoint = new AddRemoveAccessoryEndpoint();
+            HttpServer.Instance.AddEndpoint("/accessory/", accessoryEndpoint);
+            accessoryEndpoint.AccessoryAddEvent += AddAccessory;
+            accessoryEndpoint.AccessoryRemoveEvent += RemoveAccessory;
+
+            MuteEndpoint muteEndpoint = new MuteEndpoint();
+            HttpServer.Instance.AddEndpoint("/mute/", muteEndpoint);
+            muteEndpoint.MutedEvent += MuteChanged;
+        }
+
+        private void MuteChanged(object sender, MutedEventArgs e)
+        {
+            this.Muted = e.Muted;
+        }
+
+        private void AddAccessory(object sender, AccessoryEventArgs e)
+        {
+            this.ActiveModel.SetAccessoryActive(e.AccessoryName, true);
+        }
+
+        private void RemoveAccessory(object sender, AccessoryEventArgs e)
+        {
+            this.ActiveModel.SetAccessoryActive(e.AccessoryName, false);
+        }
+
+        private void ModelChanged(object sender, ModelEventArgs e)
+        {
+            Settings.Instance.ModelName = e.ModelName;
+        }
+
+        private void ExpressionChanged(object sender, ExpressionEventArgs e)
+        {
+            this.ActiveModel.CurrentExpression = e.ExpressionName;
         }
 
         private void HandleSettingChanged(object sender, SettingChangeEventArgs e)
@@ -33,6 +78,10 @@ namespace SimplePNGTuber.Model
             if(e.ChangeType == SettingChangeType.MODELDIR)
             {
                 LoadModels();
+            }
+            else if(e.ChangeType == SettingChangeType.MODEL)
+            {
+                this.ActiveModel = GetModel(Settings.Instance.ModelName);
             }
         }
 

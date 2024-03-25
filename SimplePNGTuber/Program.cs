@@ -1,4 +1,5 @@
 ﻿using SimplePNGTuber.Model;
+using SimplePNGTuber.Server;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace SimplePNGTuber
         static void Main()
         {
             PNGModelRegistry.Instance.LoadModels();
+            HttpServer.Instance.Start();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
