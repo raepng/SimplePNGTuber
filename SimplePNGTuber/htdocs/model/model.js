@@ -62,8 +62,8 @@ webSocket.listen(function (data) {
         getNewModel(modelName);
     } else if (data.startsWith("expression: ")) {
         var expName = data.substring(12);
-        $('.expression').css("visibility", "hidden");
-        $('#exp_' + expName).css("visibility", "visible");
+        $('.expression').css("display", "none");
+        $('#exp_' + expName).css("display", "initial");
     } else if (data.startsWith("speaking: ")) {
         speaking = data.substring(10) === "True";
         updateState();
