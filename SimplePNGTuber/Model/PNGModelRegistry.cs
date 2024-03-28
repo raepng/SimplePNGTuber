@@ -110,6 +110,10 @@ namespace SimplePNGTuber.Model
 
         public PNGModel GetModel(string name)
         {
+            if(string.IsNullOrEmpty(name) || !models.ContainsKey(name))
+            {
+                return PNGModel.Empty;
+            }
             return models[name] ?? (models[name] = LoadModel(name));
         }
 
