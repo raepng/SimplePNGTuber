@@ -237,6 +237,9 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="websocket-sharp-core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\websocketsharp.core.1.0.0\lib\netstandard2.0\websocket-sharp-core.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Audio\AudioMonitor.cs" />
@@ -265,9 +268,11 @@
       <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Model\Endpoints\AddRemoveAccessoryEndpoint.cs" />
-    <Compile Include="Model\Endpoints\MuteEndpoint.cs" />
+    <Compile Include="Model\Endpoints\GetModelEndpoint.cs" />
+    <Compile Include="Audio\Endpoints\MuteEndpoint.cs" />
     <Compile Include="Model\Endpoints\SetExpressionEndpoint.cs" />
     <Compile Include="Model\PNGModelSettings.cs" />
+    <Compile Include="Model\WSEndpoints\ModelWSEndpoint.cs" />
     <Compile Include="Options\OptionsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -284,9 +289,11 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Model\Endpoints\SetModelEndpoint.cs" />
+    <Compile Include="Server\Endpoints\WebUIEndpoint.cs" />
     <Compile Include="Server\HttpServer.cs" />
     <Compile Include="Options\Settings.cs" />
     <Compile Include="Server\HttpServerUtil.cs" />
+    <Compile Include="Server\WebSocketServer.cs" />
     <EmbeddedResource Include="ModelEditor\AccessoryPopup.resx">
       <DependentUpon>AccessoryPopup.cs</DependentUpon>
     </EmbeddedResource>
@@ -335,7 +342,27 @@
   <ItemGroup>
     <None Include="Resources\diego1.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="htdocs\img\load-35_256.gif">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="htdocs\index.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="htdocs\model\index.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="htdocs\model\model.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="htdocs\script\jquery.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="htdocs\script\jquery.simple.websocket.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="htdocs\script\jquery.websocket-0.0.1.js" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

@@ -8,6 +8,7 @@ using System.IO.Compression;
 using System.Text.Json;
 using System.Windows.Forms;
 using SimplePNGTuber.Model.Endpoints;
+using SimplePNGTuber.Model.WSEndpoints;
 
 namespace SimplePNGTuber.Model
 {
@@ -18,24 +19,32 @@ namespace SimplePNGTuber.Model
         private const string AccessoryPrefix = "acc_";
         private static PNGModelRegistry instance;
 
-        public static PNGModelRegistry Instance => instance ?? (instance = new PNGModelRegistry());
+        public static PNGModelRegistry Instance => instance ?? new PNGModelRegistry();
 
         private Dictionary<string, PNGModel> models = new Dictionary<string, PNGModel>();
 
-        public PNGModel ActiveModel { get; private set; } = PNGModel.Empty;
+        private readonly List<ModelWSEndpoint> wsEndpoints = new List<ModelWSEndpoint>();
 
-        public bool Muted { get; private set; }
+        public PNGModel ActiveModel { get; private set; } = PNGModel.Empty;
 
         private PNGModelRegistry()
         {
+            instance = this;
+
             Settings.Instance.SettingChanged += HandleSettingChanged;
+
+            LoadModels();
+            ActiveModel = GetModel(Settings.Instance.ModelName);
 
             SetModelEndpoint setModelEndpoint = new SetModelEndpoint();
             HttpServer.Instance.AddEndpoint("/setmodel/", setModelEndpoint);
             setModelEndpoint.ModelChangeEvent += ModelChanged;
 
+            GetModelEndpoint getModelEndpoint = new GetModelEndpoint();
+            HttpServer.Instance.AddEndpoint("/getmodel/", getModelEndpoint);
+
             SetExpressionEndpoint setExpressionEndpoint = new SetExpressionEndpoint();
-            HttpServer.Instance.AddEndpoint("/setexpression/", setModelEndpoint);
+            HttpServer.Instance.AddEndpoint("/setexpression/", setExpressionEndpoint);
             setExpressionEndpoint.ExpressionChangeEvent += ExpressionChanged;
 
             AddRemoveAccessoryEndpoint accessoryEndpoint = new AddRemoveAccessoryEndpoint();
@@ -43,24 +52,23 @@ namespace SimplePNGTuber.Model
             accessoryEndpoint.AccessoryAddEvent += AddAccessory;
             accessoryEndpoint.AccessoryRemoveEvent += RemoveAccessory;
 
-            MuteEndpoint muteEndpoint = new MuteEndpoint();
-            HttpServer.Instance.AddEndpoint("/mute/", muteEndpoint);
-            muteEndpoint.MutedEvent += MuteChanged;
-        }
-
-        private void MuteChanged(object sender, MutedEventArgs e)
-        {
-            this.Muted = e.Muted;
+            WebSocketServer.Instance.Server.AddWebSocketService<ModelWSEndpoint>("/model", () => {
+                ModelWSEndpoint endpoint = new ModelWSEndpoint();
+                instance.wsEndpoints.Add(endpoint);
+                return endpoint;
+            });
         }
 
         private void AddAccessory(object sender, AccessoryEventArgs e)
         {
             this.ActiveModel.SetAccessoryActive(e.AccessoryName, true);
+            this.wsEndpoints.ForEach(ep => ep.AnnounceAccessory(e.AccessoryName, true));
         }
 
         private void RemoveAccessory(object sender, AccessoryEventArgs e)
         {
             this.ActiveModel.SetAccessoryActive(e.AccessoryName, false);
+            this.wsEndpoints.ForEach(ep => ep.AnnounceAccessory(e.AccessoryName, false));
         }
 
         private void ModelChanged(object sender, ModelEventArgs e)
@@ -71,6 +79,7 @@ namespace SimplePNGTuber.Model
         private void ExpressionChanged(object sender, ExpressionEventArgs e)
         {
             this.ActiveModel.CurrentExpression = e.ExpressionName;
+            this.wsEndpoints.ForEach(ep => ep.AnnounceExpressionChange(e.ExpressionName));
         }
 
         private void HandleSettingChanged(object sender, SettingChangeEventArgs e)
@@ -82,6 +91,7 @@ namespace SimplePNGTuber.Model
             else if(e.ChangeType == SettingChangeType.MODEL)
             {
                 this.ActiveModel = GetModel(Settings.Instance.ModelName);
+                this.wsEndpoints.ForEach(ep => ep.AnnounceModelChange(Settings.Instance.ModelName));
             }
         }
 
@@ -124,7 +134,7 @@ namespace SimplePNGTuber.Model
                 var expressions = new Dictionary<string, Image[]>();
                 var accessories = new Dictionary<string, Image>();
                 var modelSettings = new PNGModelSettings();
-                using (ZipArchive zip = ZipFile.OpenRead(Settings.Instance.ModelDir + "/" + name + ModelFileExtension))
+                using (ZipArchive zip = ZipFile.OpenRead(GetModelFileName(name)))
                 {
                     foreach (ZipArchiveEntry entry in zip.Entries)
                     {
@@ -199,7 +209,7 @@ namespace SimplePNGTuber.Model
             var settingsString = JsonSerializer.Serialize(settings);
             File.WriteAllText(tmpDir + "/settings.json", settingsString);
 
-            string modelFile = Settings.Instance.ModelDir + "/" + name + ModelFileExtension;
+            string modelFile = GetModelFileName(name);
             bool saved = false;
             if(!File.Exists(modelFile) || MessageBox.Show("Model already exists. Overwrite?", "Save Model", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
@@ -209,6 +219,11 @@ namespace SimplePNGTuber.Model
             }
             Directory.Delete(tmpDir, true);
             return saved;
+        }
+
+        public string GetModelFileName(string modelName)
+        {
+            return Settings.Instance.ModelDir + "/" + modelName + ModelFileExtension;
         }
     }
 }

@@ -15,13 +15,9 @@ namespace SimplePNGTuber.Options
 {
     public partial class OptionsForm : Form
     {
-        private readonly AudioMonitor monitor;
-
-        public OptionsForm(AudioMonitor monitor)
+        public OptionsForm()
         {
             InitializeComponent();
-
-            this.monitor = monitor;
 
             this.dirText.Text = Settings.Instance.ModelDir;
             this.voiceThreshold.Value = (int)(Settings.Instance.VoiceThreshold * 100);
@@ -37,7 +33,7 @@ namespace SimplePNGTuber.Options
             serverPort.Value = Settings.Instance.ServerPort;
 
             LoadModels();
-            monitor.LevelChanged += HandleLevelChanged;
+            AudioMonitor.Instance.LevelChanged += HandleLevelChanged;
         }
 
         private void HandleLevelChanged(object sender, LevelChangedEventArgs e)
@@ -85,7 +81,7 @@ namespace SimplePNGTuber.Options
 
         private void OptionsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            monitor.LevelChanged -= HandleLevelChanged;
+            AudioMonitor.Instance.LevelChanged -= HandleLevelChanged;
         }
 
         private void ModelCombo_SelectedIndexChanged(object sender, EventArgs e)

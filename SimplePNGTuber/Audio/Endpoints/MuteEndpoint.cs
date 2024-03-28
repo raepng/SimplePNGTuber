@@ -3,7 +3,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace SimplePNGTuber.Model.Endpoints
+namespace SimplePNGTuber.Audio.Endpoints
 {
     public class MuteEndpoint : Endpoint
     {
