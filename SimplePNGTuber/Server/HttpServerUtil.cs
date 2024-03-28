@@ -17,5 +17,12 @@ namespace SimplePNGTuber.Server
 
             await response.OutputStream.WriteAsync(data, 0, data.Length);
         }
+
+        public static async Task WriteReponseAsync(byte[] data, HttpListenerResponse response)
+        {
+            response.ContentLength64 = data.LongLength;
+
+            await response.OutputStream.WriteAsync(data, 0, data.Length);
+        }
     }
 }

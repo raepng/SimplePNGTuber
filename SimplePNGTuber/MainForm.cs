@@ -24,7 +24,6 @@ namespace SimplePNGTuber
         public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
 
         private readonly Random random = new Random();
-        private readonly AudioMonitor monitor;
 
 
         private PNGState state = PNGState.SILENT;
@@ -33,13 +32,12 @@ namespace SimplePNGTuber
         private bool animationActive = false;
         private double animationProgress = -1;
 
-        public PNGModel Model { get; private set; } = PNGModel.Empty;
         public string Expression
         {
-            get => Model.CurrentExpression;
+            get => PNGModelRegistry.Instance.ActiveModel.CurrentExpression;
             set
             {
-                Model.CurrentExpression = value;
+                PNGModelRegistry.Instance.ActiveModel.CurrentExpression = value;
                 UpdateImage();
             }
         }
@@ -48,9 +46,7 @@ namespace SimplePNGTuber
         {
             InitializeComponent();
 
-            monitor = new AudioMonitor();
-
-            monitor.VoiceStateChanged += VoiceStateChanged;
+            AudioMonitor.Instance.VoiceStateChanged += VoiceStateChanged;
             Settings.Instance.SettingChanged += SettingChanged;
             LoadFromSettings();
             UpdateImage();
@@ -67,7 +63,7 @@ namespace SimplePNGTuber
                         UpdateImage();
                         break;
                     case SettingChangeType.MIC:
-                        monitor.RecordingDevice = Settings.Instance.MicDevice;
+                        AudioMonitor.Instance.RecordingDevice = Settings.Instance.MicDevice;
                         break;
                     case SettingChangeType.BACKGROUND:
                         this.BackColor = Settings.Instance.BackgroundColor;
@@ -81,15 +77,14 @@ namespace SimplePNGTuber
         private void LoadFromSettings()
         {
             LoadModel();
-            monitor.RecordingDevice = Settings.Instance.MicDevice;
+            AudioMonitor.Instance.RecordingDevice = Settings.Instance.MicDevice;
             this.BackColor = Settings.Instance.BackgroundColor;
             this.TransparencyKey = Settings.Instance.BackgroundColor;
         }
 
         private void LoadModel()
         {
-            Model = PNGModelRegistry.Instance.GetModel(Settings.Instance.ModelName);
-            var modelSilent = Model.GetState(PNGState.SILENT);
+            var modelSilent = PNGModelRegistry.Instance.ActiveModel.GetState(PNGState.SILENT);
             Icon icon = ConvertToIco(modelSilent, modelSilent.Width);
             notifyIcon.Icon = icon;
             this.Icon = icon;
@@ -172,7 +167,7 @@ namespace SimplePNGTuber
 
         private void UpdateImage()
         {
-            pngTuberImageBox.BackgroundImage = Model.GetState(state);
+            pngTuberImageBox.BackgroundImage = PNGModelRegistry.Instance.ActiveModel.GetState(state);
         }
 
         private void PngTuberImageBox_MouseDown(object sender, MouseEventArgs e)
@@ -219,7 +214,7 @@ namespace SimplePNGTuber
 
         private void OptionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new OptionsForm(monitor).ShowDialog();
+            new OptionsForm().ShowDialog();
         }
 
         private void CreateModelToolStripMenuItem_Click(object sender, EventArgs e)
@@ -229,7 +224,7 @@ namespace SimplePNGTuber
 
         private void EditCurrentModelToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            new EditModelForm(Model).ShowDialog();
+            new EditModelForm(PNGModelRegistry.Instance.ActiveModel).ShowDialog();
         }
 
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)

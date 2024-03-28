@@ -18,6 +18,7 @@ namespace SimplePNGTuber
         {
             PNGModelRegistry.Instance.LoadModels();
             HttpServer.Instance.Start();
+            WebSocketServer.Instance.Start();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

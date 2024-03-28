@@ -1,5 +1,6 @@
 ﻿using SimplePNGTuber.Model;
 using SimplePNGTuber.Options;
+using SimplePNGTuber.Server.Endpoints;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,9 @@ namespace SimplePNGTuber.Server
         public HttpServer()
         {
             Settings.Instance.SettingChanged += SettingChanged;
+
+            WebUIEndpoint webUI = new WebUIEndpoint();
+            this.AddEndpoint("/webui/", webUI);
         }
 
         private void SettingChanged(object sender, SettingChangeEventArgs e)

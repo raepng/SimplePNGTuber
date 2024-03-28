@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NAudio.Utils;
 using NAudio.Wave;
-using NAudio.Wave.SampleProviders;
+using SimplePNGTuber.Audio.Endpoints;
 using SimplePNGTuber.Model;
 using SimplePNGTuber.Options;
+using SimplePNGTuber.Server;
 
 namespace SimplePNGTuber.Audio
 {
     public class AudioMonitor
     {
+		private static AudioMonitor instance;
+
+		public static AudioMonitor Instance => instance ?? (instance = new AudioMonitor());
+
 		public event EventHandler<StateChangedEventArgs> VoiceStateChanged;
 		public event EventHandler<LevelChangedEventArgs> LevelChanged;
+
+		public bool Muted { get; private set; }
 
 		public int RecordingDevice
 		{
@@ -42,6 +45,17 @@ namespace SimplePNGTuber.Audio
         private bool VoiceActive = false;
 		private WaveInEvent Microphone;
 
+		private AudioMonitor()
+        {
+			MuteEndpoint muteEndpoint = new MuteEndpoint();
+			HttpServer.Instance.AddEndpoint("/mute/", muteEndpoint);
+			muteEndpoint.MutedEvent += MuteChanged;
+		}
+
+        private void MuteChanged(object sender, MutedEventArgs e)
+        {
+            Muted = e.Muted;
+        }
 
         private void ProcessData(object sender, WaveInEventArgs e)
         {
@@ -59,7 +73,7 @@ namespace SimplePNGTuber.Audio
 			LevelChanged?.Invoke(this, new LevelChangedEventArgs() { LevelRaw = peakPercent, LevelSmoothed = peakPercentSmoothed });
 			previousLevel = peakPercentSmoothed;
 			
-			if (PNGModelRegistry.Instance.Muted)
+			if (Muted)
 			{
 				if (VoiceActive)
 				{
