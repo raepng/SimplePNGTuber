@@ -39,12 +39,14 @@ function getNewModel(modelName) {
 function updateState() {
     $('.exp').css("visibility", "hidden");
     if (speaking) {
+        $('#model').addClass("bounce");
         if (blinking) {
             $('.exp3').css("visibility", "visible");
         } else {
             $('.exp1').css("visibility", "visible");
         }
     } else {
+        $('#model').removeClass("bounce");
         if (blinking) {
             $('.exp2').css("visibility", "visible");
         } else {
