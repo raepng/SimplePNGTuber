@@ -197,6 +197,7 @@
             this.accessoryListBox.Size = new System.Drawing.Size(379, 147);
             this.accessoryListBox.TabIndex = 0;
             this.accessoryListBox.SelectedIndexChanged += new System.EventHandler(this.AccessoryListBox_SelectedIndexChanged);
+            this.accessoryListBox.DoubleClick += new System.EventHandler(this.accessoryListBox_DoubleClick);
             // 
             // tableLayoutPanel5
             // 

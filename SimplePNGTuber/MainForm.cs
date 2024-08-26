@@ -230,6 +230,7 @@ namespace SimplePNGTuber
         private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             HttpServer.Instance.Stop();
+            WebSocketServer.Instance.Stop();
             Application.Exit();
         }
     }

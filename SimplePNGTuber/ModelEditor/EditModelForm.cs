@@ -151,6 +151,21 @@ namespace SimplePNGTuber.ModelEditor
             }
         }
 
+        private void accessoryListBox_DoubleClick(object sender, EventArgs e)
+        {
+            if (accessoryListBox.SelectedIndex < 0)
+            {
+                return;
+            }
+            else
+            {
+                AccessoryPopup accessoryPopup = new AccessoryPopup((EditAccessory) accessoryListBox.SelectedItem);
+                accessoryPopup.ShowDialog();
+                accessoryListBox.Items.RemoveAt(accessoryListBox.SelectedIndex);
+                AddAccessory(accessoryPopup);
+            }
+        }
+
         private void ModelNameTextBox_TextChanged(object sender, EventArgs e)
         {
             modelNameTextBox.Text = modelNameTextBox.Text.ToLower();
@@ -223,7 +238,7 @@ namespace SimplePNGTuber.ModelEditor
 
     public struct EditExpression
     {
-        internal static readonly EditExpression Empty = new EditExpression("",
+        internal static EditExpression Empty => new EditExpression("",
             new Image[4] { Resources.diego0, Resources.diego1, Resources.diego0, Resources.diego1 },
             new string[4] { "", "", "", "" });
 
@@ -261,7 +276,7 @@ namespace SimplePNGTuber.ModelEditor
 
         public override string ToString()
         {
-            return Name;
+            return Name + " | Layer " + this.Layer + " | " + this.ImageLocation;
         }
     }
 }

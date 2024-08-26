@@ -11,7 +11,7 @@ namespace SimplePNGTuber.ModelEditor
         public Image Image { get; private set; }
         public string ImageLocation { get; private set; }
 
-        public int Layer { get; private set; }
+        public int Layer { get; private set; } = 1;
 
         public AccessoryPopup()
         {
