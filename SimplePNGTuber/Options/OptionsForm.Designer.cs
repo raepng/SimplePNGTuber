@@ -54,6 +54,8 @@
             this.rawLevelProgress = new System.Windows.Forms.ProgressBar();
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.wsServerPort = new System.Windows.Forms.NumericUpDown();
+            this.label11 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.voiceThreshold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.blinkFrequency)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bgColorPictureBox)).BeginInit();
@@ -61,6 +63,7 @@
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.voiceSmoothing)).BeginInit();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.wsServerPort)).BeginInit();
             this.SuspendLayout();
             // 
             // dirText
@@ -313,11 +316,39 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Model";
             // 
+            // wsServerPort
+            // 
+            this.wsServerPort.Location = new System.Drawing.Point(113, 410);
+            this.wsServerPort.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.wsServerPort.Name = "wsServerPort";
+            this.wsServerPort.Size = new System.Drawing.Size(675, 20);
+            this.wsServerPort.TabIndex = 20;
+            this.wsServerPort.Value = new decimal(new int[] {
+            8001,
+            0,
+            0,
+            0});
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(12, 412);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(78, 13);
+            this.label11.TabIndex = 19;
+            this.label11.Text = "WSServer Port";
+            // 
             // OptionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 552);
+            this.Controls.Add(this.wsServerPort);
+            this.Controls.Add(this.label11);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.serverPort);
@@ -338,6 +369,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.voiceSmoothing)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.wsServerPort)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -371,5 +403,7 @@
         private System.Windows.Forms.ProgressBar rawLevelProgress;
         private System.Windows.Forms.NumericUpDown voiceSmoothing;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.NumericUpDown wsServerPort;
+        private System.Windows.Forms.Label label11;
     }
 }

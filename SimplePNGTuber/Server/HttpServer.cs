@@ -26,8 +26,11 @@ namespace SimplePNGTuber.Server
         {
             Settings.Instance.SettingChanged += SettingChanged;
 
-            WebUIEndpoint webUI = new WebUIEndpoint();
-            this.AddEndpoint("/webui/", webUI);
+            WebUIEndpoint webUIEndpoint = new WebUIEndpoint();
+            this.AddEndpoint("/webui/", webUIEndpoint);
+
+            SettingsEndpoint settingsEndpoint = new SettingsEndpoint();
+            this.AddEndpoint("/settings/", settingsEndpoint);
         }
 
         private void SettingChanged(object sender, SettingChangeEventArgs e)

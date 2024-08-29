@@ -3,9 +3,16 @@ var speaking = false;
 var blinking = false;
 var blink = 0;
 
+
+var sheet = window.document.styleSheets[0];
+sheet.insertRule('@keyframes bounce { 0% { transform: translateY(0px); } 50% { transform: translateY(-' + settings.animationHeight + 'px); } 100% { transform: translateY(0px); }}');
+sheet.insertRule('#model { position: relative; top: ' + settings.animationHeight + 'px; }');
+sheet.insertRule('.bounce { animation: bounce ' + settings.animationSpeed * 3 + 's ease-in-out; animation-iteration-count: 1; }');
+
+
 function getNewModel(modelName) {
     modelLoaded = false;
-    $.get("http://127.0.0.1:8000/getmodel/" + modelName, function (data) {
+    $.get("http://127.0.0.1:" + settings.serverPort + "/getmodel/" + modelName, function (data) {
         console.log(data);
         var model = $("#model");
         model.children().remove();
@@ -55,7 +62,7 @@ function updateState() {
     }
 }
 
-var webSocket = $.simpleWebSocket({ url: 'ws://127.0.0.1:8001/model', dataType: 'text' });
+var webSocket = $.simpleWebSocket({ url: 'ws://127.0.0.1:' + settings.wsServerPort + '/model', dataType: 'text' });
 webSocket.listen(function (data) {
     console.log(data);
 
@@ -90,7 +97,7 @@ setInterval(function () {
         updateState();
     }
     if (Math.random() < 0.5) {
-        blink += 0.03;
+        blink += settings.blinkFrequency;
     }
     if (blink > 1) {
         blink = 0;

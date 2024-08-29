@@ -11,8 +11,6 @@ namespace SimplePNGTuber.ModelEditor
 {
     public partial class EditModelForm : Form
     {
-        string editTmpFolder = Settings.Instance.ModelDir + Path.DirectorySeparatorChar + "modelEditorTmp" + Path.DirectorySeparatorChar;
-
         public EditModelForm()
         {
             InitializeComponent();
@@ -27,6 +25,8 @@ namespace SimplePNGTuber.ModelEditor
 
         private void PopulateForm(PNGModel model)
         {
+            string editTmpFolder = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName()) + Path.DirectorySeparatorChar;
+
             modelNameTextBox.Text = model.Name;
             Directory.CreateDirectory(editTmpFolder);
             foreach (var exp in model.expressions)
@@ -208,30 +208,6 @@ namespace SimplePNGTuber.ModelEditor
             if (PNGModelRegistry.Instance.SaveModel(modelNameTextBox.Text, settings, expressions, accessories))
             {
                 this.Close();
-            }
-        }
-
-        private void EditModelForm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            Thread thread = new Thread(DeleteEditTmpFolder);
-            thread.Start();
-        }
-
-        private void DeleteEditTmpFolder()
-        {
-            bool deleted = false;
-            while(!deleted)
-            {
-                try
-                {
-                    Directory.Delete(editTmpFolder, true);
-                    deleted = true;
-                }
-                catch (Exception)
-                {
-                    deleted = false;
-                    Thread.Sleep(1000);
-                }
             }
         }
     }

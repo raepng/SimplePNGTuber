@@ -289,6 +289,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Model\Endpoints\SetModelEndpoint.cs" />
+    <Compile Include="Server\Endpoints\SettingsEndpoint.cs" />
     <Compile Include="Server\Endpoints\WebUIEndpoint.cs" />
     <Compile Include="Server\HttpServer.cs" />
     <Compile Include="Options\Settings.cs" />
@@ -352,6 +353,9 @@
     <Content Include="htdocs\model\index.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="htdocs\model\model_backup.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="htdocs\model\model.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -364,6 +368,7 @@
     <Content Include="htdocs\script\jquery.simple.websocket.min.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Resources\Settings.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

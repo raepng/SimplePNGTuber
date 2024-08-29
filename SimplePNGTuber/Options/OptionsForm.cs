@@ -31,6 +31,7 @@ namespace SimplePNGTuber.Options
             micCombo.SelectedIndex = Settings.Instance.MicDevice + 1;
             bgColorPictureBox.BackColor = Settings.Instance.BackgroundColor;
             serverPort.Value = Settings.Instance.ServerPort;
+            wsServerPort.Value = Settings.Instance.WSServerPort;
 
             LoadModels();
             AudioMonitor.Instance.LevelChanged += HandleLevelChanged;
@@ -76,6 +77,7 @@ namespace SimplePNGTuber.Options
         private void OptionsForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             Settings.Instance.ServerPort = (int) serverPort.Value;
+            Settings.Instance.WSServerPort = (int) wsServerPort.Value;
             Settings.Instance.Save();
         }
 

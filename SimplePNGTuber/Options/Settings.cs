@@ -81,6 +81,16 @@ namespace SimplePNGTuber.Options
             }
         }
 
+        public int WSServerPort
+        {
+            get => settings.wsServerPort;
+            set
+            {
+                settings.wsServerPort = value;
+                SettingChanged?.Invoke(this, new SettingChangeEventArgs() { ChangeType = SettingChangeType.SERVER });
+            }
+        }
+
         public Color BackgroundColor
         {
             get => (Color) new ColorConverter().ConvertFromString(settings.bgColor);
@@ -127,7 +137,7 @@ namespace SimplePNGTuber.Options
             {
                 return new Settings()
                 {
-                    settings = new SettingsInternal("", "", 0.05, 0.90, 0.03, 0, 8000, "#00ff00", 10, 0.1)
+                    settings = new SettingsInternal("", "", 0.05, 0.90, 0.03, 0, 8000, 8001, "#00ff00", 10, 0.1)
                 };
             }
         }
@@ -147,6 +157,8 @@ namespace SimplePNGTuber.Options
             public double blinkFrequency { get; set; }
             public int micDevice { get; set; }
             public int serverPort { get; set; }
+
+            public int wsServerPort { get; set; }
             public string bgColor { get; set; }
             public int animationHeight { get; set; }
             public double animationSpeed { get; set; }
@@ -154,7 +166,7 @@ namespace SimplePNGTuber.Options
             public SettingsInternal(string modelDir, string modelName,
                 double voiceThreshold, double voiceSmoothing,
                 double blinkFrequency, int micDevice,
-                int serverPort, string bgColor,
+                int serverPort, int wsServerPort, string bgColor,
                 int animationHeight, double animationSpeed)
             {
                 this.modelDir = modelDir;
@@ -164,6 +176,7 @@ namespace SimplePNGTuber.Options
                 this.blinkFrequency = blinkFrequency;
                 this.micDevice = micDevice;
                 this.serverPort = serverPort;
+                this.wsServerPort = wsServerPort;
                 this.bgColor = bgColor;
                 this.animationHeight = animationHeight;
                 this.animationSpeed = animationSpeed;

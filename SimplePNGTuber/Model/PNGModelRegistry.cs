@@ -52,7 +52,7 @@ namespace SimplePNGTuber.Model
             accessoryEndpoint.AccessoryAddEvent += AddAccessory;
             accessoryEndpoint.AccessoryRemoveEvent += RemoveAccessory;
 
-            WebSocketServer.Instance.Server.AddWebSocketService<ModelWSEndpoint>("/model", () => {
+            WebSocketServer.Instance.AddWebSocketService("/model", () => {
                 ModelWSEndpoint endpoint = new ModelWSEndpoint();
                 instance.wsEndpoints.Add(endpoint);
                 return endpoint;
