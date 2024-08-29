@@ -35,9 +35,9 @@
             this.contextMenuStrip = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.createModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.editCurrentModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.animationTimer = new System.Windows.Forms.Timer(this.components);
-            this.editCurrentModelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.pngTuberImageBox)).BeginInit();
             this.contextMenuStrip.SuspendLayout();
             this.SuspendLayout();
@@ -78,26 +78,33 @@
             this.editCurrentModelToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.contextMenuStrip.Name = "contextMenuStrip";
-            this.contextMenuStrip.Size = new System.Drawing.Size(181, 114);
+            this.contextMenuStrip.Size = new System.Drawing.Size(175, 92);
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
             this.optionsToolStripMenuItem.Text = "Options";
             this.optionsToolStripMenuItem.Click += new System.EventHandler(this.OptionsToolStripMenuItem_Click);
             // 
             // createModelToolStripMenuItem
             // 
             this.createModelToolStripMenuItem.Name = "createModelToolStripMenuItem";
-            this.createModelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.createModelToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
             this.createModelToolStripMenuItem.Text = "Create Model";
             this.createModelToolStripMenuItem.Click += new System.EventHandler(this.CreateModelToolStripMenuItem_Click);
+            // 
+            // editCurrentModelToolStripMenuItem
+            // 
+            this.editCurrentModelToolStripMenuItem.Name = "editCurrentModelToolStripMenuItem";
+            this.editCurrentModelToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
+            this.editCurrentModelToolStripMenuItem.Text = "Edit Current Model";
+            this.editCurrentModelToolStripMenuItem.Click += new System.EventHandler(this.EditCurrentModelToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(174, 22);
             this.exitToolStripMenuItem.Text = "Exit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItem_Click);
             // 
@@ -106,13 +113,6 @@
             this.animationTimer.Enabled = true;
             this.animationTimer.Interval = 15;
             this.animationTimer.Tick += new System.EventHandler(this.AnimationTimer_Tick);
-            // 
-            // editCurrentModelToolStripMenuItem
-            // 
-            this.editCurrentModelToolStripMenuItem.Name = "editCurrentModelToolStripMenuItem";
-            this.editCurrentModelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.editCurrentModelToolStripMenuItem.Text = "Edit Current Model";
-            this.editCurrentModelToolStripMenuItem.Click += new System.EventHandler(this.EditCurrentModelToolStripMenuItem_Click);
             // 
             // MainForm
             // 

@@ -88,8 +88,10 @@ namespace SimplePNGTuber
             Icon icon = ConvertToIco(modelSilent, modelSilent.Width);
             notifyIcon.Icon = icon;
             this.Icon = icon;
-            this.Size = new Size(modelSilent.Width, modelSilent.Height + Settings.Instance.AnimationHeight);
-            this.pngTuberImageBox.Size = new Size(modelSilent.Width, modelSilent.Height);
+            int width = (int)(modelSilent.Width * Settings.Instance.ModelScale);
+            int height = (int)(modelSilent.Height * Settings.Instance.ModelScale);
+            this.Size = new Size(width, height + Settings.Instance.AnimationHeight);
+            this.pngTuberImageBox.Size = new Size(width, height);
             pngTuberImageBox.Location = new Point(0, Settings.Instance.AnimationHeight);
         }
 

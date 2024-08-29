@@ -23,6 +23,7 @@ namespace SimplePNGTuber.Options
             this.voiceThreshold.Value = (int)(Settings.Instance.VoiceThreshold * 100);
             this.voiceSmoothing.Value = (int)(Settings.Instance.VoiceSmoothing * 100);
             this.blinkFrequency.Value = (int)(Settings.Instance.BlinkFrequency * 100);
+            this.modelScale.Value = (int)(Settings.Instance.ModelScale * 100);
             this.micCombo.Items.Clear();
             foreach(DeviceInfo info in AudioMonitor.ListInputDevices())
             {
@@ -128,6 +129,11 @@ namespace SimplePNGTuber.Options
                 Settings.Instance.BackgroundColor = bgColorDialog.Color;
                 bgColorPictureBox.BackColor = bgColorDialog.Color;
             }
+        }
+
+        private void modelScale_ValueChanged(object sender, EventArgs e)
+        {
+            Settings.Instance.ModelScale = (double) modelScale.Value / 100;
         }
     }
 }
