@@ -17,5 +17,18 @@ Accessory files are prefixed with `acc_`:
 ```
 acc_flowers.png
 ```
+## Using the HTTP commands
+Once you have setup your model, you are ready to access and control it via HTTP GET Requests.
+The base address for this is your local address `127.0.0.1` and the port you have configured in your settings. With the default port of `8000` your base URL would be `http://127.0.0.1:8000`. From there you can do various things:
+### Changing the model
+At `http://127.0.0.1:8000/setmodel/<modelname>` you can change the current model the software is using. Replace `<modelname>` with the name of your model.
+### Changing the expression
+At `http://127.0.0.1:8000/setexpression/<expressionname>` you can change the current model the software is using. Replace `<expressionname>` with the name of your models expression.
+### Adding or removing accessories
+At `http://127.0.0.1:8000/accessory/add/<accessoryname>` you can add accessories to your model. Replace `<accessoryname>` with the name of your models accessory.
+At `http://127.0.0.1:8000/accessory/remove/<accessoryname>` you can remove accessories from your model. Replace `<accessoryname>` with the name of your models accessory.
+## Using [Streamer.bot](https://streamer.bot/) to control your model
+You can use Streamer.bot to execute any of the HTTP commands. To do this, use the "Fetch URL" subaction and set the URL paremeter accordingly. For example if you wanted to add the flowers accessory to your model you would set up the Fetch URL subaction to access `http://127.0.0.1:8000/accessory/add/flowers`.
+
 ---
-Please note that this software is just a fun project. It is planned to do some refactoring and cleaning up of the code to improve stability and maintainability. Also some documentation for the http interface is still needed.
+Please note that this software is just a fun project. It is planned to do some refactoring and cleaning up of the code to improve stability and maintainability.
