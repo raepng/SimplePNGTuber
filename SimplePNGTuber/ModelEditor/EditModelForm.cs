@@ -52,7 +52,7 @@ namespace SimplePNGTuber.ModelEditor
         {
             if(expressionListBox.SelectedIndex >= 0)
             {
-                if(((EditExpression)expressionListBox.SelectedItem).Name.Equals("neutral"))
+                if (((EditExpression)expressionListBox.SelectedItem).Name.Equals("neutral"))
                 {
                     removeExpButton.Enabled = false;
                 }
@@ -60,8 +60,8 @@ namespace SimplePNGTuber.ModelEditor
                 {
                     removeExpButton.Enabled = true;
                 }
-                previewPictureBox.Image = ((EditExpression)expressionListBox.SelectedItem).Images[0];
-                previewPictureBox.Size = previewPictureBox.Image.Size;
+                var image = ((EditExpression)expressionListBox.SelectedItem).Images[0];
+                SetPreviewImage(image);
             }
             else
             {
@@ -141,8 +141,8 @@ namespace SimplePNGTuber.ModelEditor
         {
             if(accessoryListBox.SelectedIndex >= 0)
             {
-                previewPictureBox.Image = ((EditAccessory) accessoryListBox.SelectedItem).Image;
-                previewPictureBox.Size = previewPictureBox.Image.Size;
+                var image = ((EditAccessory)accessoryListBox.SelectedItem).Image;
+                SetPreviewImage(image);
                 removeAccButton.Enabled = true;
             }
             else
@@ -209,6 +209,15 @@ namespace SimplePNGTuber.ModelEditor
             {
                 this.Close();
             }
+        }
+
+        private void SetPreviewImage(Image image)
+        {
+            previewPictureBox.BackgroundImage = image;
+            var size = image.Size;
+            var scaleFactor = 600.0 / size.Width;
+            var newSize = new Size((int)(size.Width * scaleFactor), (int)(size.Height * scaleFactor));
+            previewPictureBox.Size = newSize;
         }
     }
 

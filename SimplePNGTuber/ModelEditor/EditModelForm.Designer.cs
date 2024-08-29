@@ -216,6 +216,7 @@
             // 
             // previewPictureBox
             // 
+            this.previewPictureBox.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.previewPictureBox.Location = new System.Drawing.Point(3, 3);
             this.previewPictureBox.Name = "previewPictureBox";
             this.previewPictureBox.Size = new System.Drawing.Size(100, 50);
