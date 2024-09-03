@@ -97,6 +97,10 @@ namespace SimplePNGTuber
 
         private void VoiceStateChanged(object sender, StateChangedEventArgs e)
         {
+            if(!Settings.Instance.AnimateModel)
+            {
+                return;
+            }
             if(e.VoiceActive)
             {
                 animationActive = true;
@@ -124,7 +128,11 @@ namespace SimplePNGTuber
 
         private void BlinkTimer_Tick(object sender, EventArgs e)
         {
-            if(random.Next(2) == 1)
+            if (!Settings.Instance.AnimateModel)
+            {
+                return;
+            }
+            if (random.Next(2) == 1)
             {
                 blink += Settings.Instance.BlinkFrequency;
             }

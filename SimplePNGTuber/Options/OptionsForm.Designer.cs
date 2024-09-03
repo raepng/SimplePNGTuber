@@ -57,9 +57,10 @@
             this.wsServerPort = new System.Windows.Forms.NumericUpDown();
             this.label11 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.label12 = new System.Windows.Forms.Label();
             this.modelScale = new System.Windows.Forms.NumericUpDown();
+            this.label12 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.enableAnimCheckbox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.voiceThreshold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.blinkFrequency)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bgColorPictureBox)).BeginInit();
@@ -351,6 +352,7 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Controls.Add(this.enableAnimCheckbox);
             this.groupBox3.Controls.Add(this.modelScale);
             this.groupBox3.Controls.Add(this.label12);
             this.groupBox3.Controls.Add(this.label6);
@@ -358,19 +360,10 @@
             this.groupBox3.Controls.Add(this.selectColorBtn);
             this.groupBox3.Location = new System.Drawing.Point(12, 289);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(776, 85);
+            this.groupBox3.Size = new System.Drawing.Size(776, 109);
             this.groupBox3.TabIndex = 21;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Form Settings";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(11, 52);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(74, 13);
-            this.label12.TabIndex = 14;
-            this.label12.Text = "Model Scale%";
             // 
             // modelScale
             // 
@@ -395,24 +388,44 @@
             0});
             this.modelScale.ValueChanged += new System.EventHandler(this.modelScale_ValueChanged);
             // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(11, 52);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(74, 13);
+            this.label12.TabIndex = 14;
+            this.label12.Text = "Model Scale%";
+            // 
             // groupBox4
             // 
             this.groupBox4.Controls.Add(this.label7);
             this.groupBox4.Controls.Add(this.serverPort);
             this.groupBox4.Controls.Add(this.wsServerPort);
             this.groupBox4.Controls.Add(this.label11);
-            this.groupBox4.Location = new System.Drawing.Point(12, 381);
+            this.groupBox4.Location = new System.Drawing.Point(12, 404);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Size = new System.Drawing.Size(776, 90);
             this.groupBox4.TabIndex = 22;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Server Settings";
             // 
+            // enableAnimCheckbox
+            // 
+            this.enableAnimCheckbox.AutoSize = true;
+            this.enableAnimCheckbox.Location = new System.Drawing.Point(14, 81);
+            this.enableAnimCheckbox.Name = "enableAnimCheckbox";
+            this.enableAnimCheckbox.Size = new System.Drawing.Size(192, 17);
+            this.enableAnimCheckbox.TabIndex = 18;
+            this.enableAnimCheckbox.Text = "Enable Animation in Windows Form";
+            this.enableAnimCheckbox.UseVisualStyleBackColor = true;
+            this.enableAnimCheckbox.CheckedChanged += new System.EventHandler(this.enableAnimCheckbox_CheckedChanged);
+            // 
             // OptionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 552);
+            this.ClientSize = new System.Drawing.Size(800, 506);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -474,5 +487,6 @@
         private System.Windows.Forms.NumericUpDown modelScale;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.GroupBox groupBox4;
+        private System.Windows.Forms.CheckBox enableAnimCheckbox;
     }
 }

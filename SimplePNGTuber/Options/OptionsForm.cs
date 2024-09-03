@@ -24,6 +24,7 @@ namespace SimplePNGTuber.Options
             this.voiceSmoothing.Value = (int)(Settings.Instance.VoiceSmoothing * 100);
             this.blinkFrequency.Value = (int)(Settings.Instance.BlinkFrequency * 100);
             this.modelScale.Value = (int)(Settings.Instance.ModelScale * 100);
+            this.enableAnimCheckbox.Checked = Settings.Instance.AnimateModel;
             this.micCombo.Items.Clear();
             foreach(DeviceInfo info in AudioMonitor.ListInputDevices())
             {
@@ -134,6 +135,11 @@ namespace SimplePNGTuber.Options
         private void modelScale_ValueChanged(object sender, EventArgs e)
         {
             Settings.Instance.ModelScale = (double) modelScale.Value / 100;
+        }
+
+        private void enableAnimCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.Instance.AnimateModel = enableAnimCheckbox.Checked;
         }
     }
 }

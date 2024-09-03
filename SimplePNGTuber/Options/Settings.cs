@@ -45,6 +45,15 @@ namespace SimplePNGTuber.Options
             }
         }
 
+        public bool AnimateModel
+        {
+            get => settings.animateModel;
+            set
+            {
+                settings.animateModel = value;
+            }
+        }
+
         public double VoiceThreshold
         {
             get => settings.voiceThreshold;
@@ -148,7 +157,7 @@ namespace SimplePNGTuber.Options
             {
                 return new Settings()
                 {
-                    settings = new SettingsInternal("", "", 1, 0.05, 0.90, 0.03, 0, 8000, 8001, "#00ff00", 10, 0.1)
+                    settings = new SettingsInternal("", "", 1, false, 0.05, 0.90, 0.03, 0, 8000, 8001, "#00ff00", 10, 0.1)
                 };
             }
         }
@@ -163,8 +172,8 @@ namespace SimplePNGTuber.Options
         {
             public string modelDir { get; set; }
             public string modelName { get; set; }
-
             public double modelScale { get; set; }
+            public bool animateModel { get; set; }
             public double voiceThreshold { get; set; }
             public double voiceSmoothing { get; set; }
             public double blinkFrequency { get; set; }
@@ -176,7 +185,7 @@ namespace SimplePNGTuber.Options
             public int animationHeight { get; set; }
             public double animationSpeed { get; set; }
 
-            public SettingsInternal(string modelDir, string modelName, double modelScale,
+            public SettingsInternal(string modelDir, string modelName, double modelScale, bool animateModel,
                 double voiceThreshold, double voiceSmoothing,
                 double blinkFrequency, int micDevice,
                 int serverPort, int wsServerPort, string bgColor,
@@ -185,6 +194,7 @@ namespace SimplePNGTuber.Options
                 this.modelDir = modelDir;
                 this.modelName = modelName;
                 this.modelScale = modelScale;
+                this.animateModel = animateModel;
                 this.voiceThreshold = voiceThreshold;
                 this.voiceSmoothing = voiceSmoothing;
                 this.blinkFrequency = blinkFrequency;
