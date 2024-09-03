@@ -157,7 +157,7 @@ namespace SimplePNGTuber.Options
             {
                 return new Settings()
                 {
-                    settings = new SettingsInternal("", "", 1, false, 0.05, 0.90, 0.03, 0, 8000, 8001, "#00ff00", 10, 0.1)
+                    settings = new SettingsInternal("", "", 1, true, 0.05, 0.75, 0.03, 0, 8000, 8001, "#00ff00", 10, 0.1)
                 };
             }
         }
