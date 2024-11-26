@@ -3,6 +3,7 @@ using SimplePNGTuber.Audio;
 using SimplePNGTuber.Options;
 using System;
 using System.Text.Json;
+using System.Threading;
 using System.Windows.Forms;
 using WebSocketSharp;
 using WebSocketSharp.Server;
@@ -18,7 +19,8 @@ namespace SimplePNGTuber.Model.WSEndpoints
 
         protected override void OnOpen()
         {
-            Send("model: " + Settings.Instance.ModelName);
+            var model = PNGModelRegistry.Instance.ActiveModel;
+            Send("model: " + model.Name);
         }
 
         protected override void OnMessage(MessageEventArgs e)
@@ -26,6 +28,15 @@ namespace SimplePNGTuber.Model.WSEndpoints
             if(e.Data.Equals("ping"))
             {
                 Send("pong");
+            }
+            else if(e.Data.Equals("modelLoaded"))
+            {
+                var model = PNGModelRegistry.Instance.ActiveModel;
+                AnnounceExpressionChange(model.CurrentExpression);
+                foreach (string active in model.activeAccessories)
+                {
+                    AnnounceAccessory(active, true);
+                }
             }
         }
 

@@ -3,12 +3,12 @@ var speaking = false;
 var blinking = false;
 var blink = 0;
 
-
 var sheet = window.document.styleSheets[0];
 sheet.insertRule('@keyframes bounce { 0% { transform: translateY(0px); } 50% { transform: translateY(-' + settings.animationHeight + 'px); } 100% { transform: translateY(0px); }}');
 sheet.insertRule('#model { position: relative; top: ' + settings.animationHeight + 'px; }');
 sheet.insertRule('.bounce { animation: bounce ' + settings.animationSpeed * 3 + 's ease-in-out; animation-iteration-count: 1; }');
 
+var webSocket = $.simpleWebSocket({ url: 'ws://127.0.0.1:' + settings.wsServerPort + '/model', dataType: 'text' });
 
 function getNewModel(modelName) {
     modelLoaded = false;
@@ -40,6 +40,7 @@ function getNewModel(modelName) {
             model.append(accessory);
         }
         modelLoaded = true;
+        webSocket.send('modelLoaded');
     });
 }
 
@@ -62,7 +63,6 @@ function updateState() {
     }
 }
 
-var webSocket = $.simpleWebSocket({ url: 'ws://127.0.0.1:' + settings.wsServerPort + '/model', dataType: 'text' });
 webSocket.listen(function (data) {
     console.log(data);
 
