@@ -28,7 +28,7 @@ function getNewModel(modelName) {
             }
             expression.css("position", "absolute");
             if (key !== "neutral") {
-                expression.css("visibility", "hidden");
+                expression.css("display", "none");
             }
             model.append(expression);
         }
