@@ -34,6 +34,9 @@ namespace SimplePNGTuber.Options
             bgColorPictureBox.BackColor = Settings.Instance.BackgroundColor;
             serverPort.Value = Settings.Instance.ServerPort;
             wsServerPort.Value = Settings.Instance.WSServerPort;
+            remoteServerPort.Value = Settings.Instance.RemoteServerPort;
+            remoteWsServerPort.Value = Settings.Instance.RemoteWsServerPort;
+            isRemoteCheckbox.Checked = Settings.Instance.IsRemote;
 
             LoadModels();
             AudioMonitor.Instance.LevelChanged += HandleLevelChanged;
@@ -140,6 +143,21 @@ namespace SimplePNGTuber.Options
         private void enableAnimCheckbox_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Instance.AnimateModel = enableAnimCheckbox.Checked;
+        }
+
+        private void remoteServerPort_ValueChanged(object sender, EventArgs e)
+        {
+            Settings.Instance.RemoteServerPort = (int) remoteServerPort.Value;
+        }
+
+        private void remoteWsServerPort_ValueChanged(object sender, EventArgs e)
+        {
+            Settings.Instance.RemoteWsServerPort = (int) remoteWsServerPort.Value;
+        }
+
+        private void isRemoteCheckbox_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.Instance.IsRemote = isRemoteCheckbox.Checked;
         }
     }
 }

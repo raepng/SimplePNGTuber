@@ -23,6 +23,7 @@ namespace SimplePNGTuber.Model.Endpoints
                 string json = JsonSerializer.Serialize(transport);
                 response.StatusCode = 200;
                 response.ContentType = "application/json";
+                response.AddHeader("Access-Control-Allow-Origin", "*");
                 await HttpServerUtil.WriteReponseAsync(json, response);
             }
             else

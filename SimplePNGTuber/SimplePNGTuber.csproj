@@ -237,8 +237,8 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
-    <Reference Include="websocket-sharp-core, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\websocketsharp.core.1.0.0\lib\netstandard2.0\websocket-sharp-core.dll</HintPath>
+    <Reference Include="websocket-sharp-core, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\websocketsharp.core.1.0.1\lib\netstandard2.0\websocket-sharp-core.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

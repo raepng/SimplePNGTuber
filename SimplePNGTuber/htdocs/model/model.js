@@ -8,11 +8,11 @@ sheet.insertRule('@keyframes bounce { 0% { transform: translateY(0px); } 50% { t
 sheet.insertRule('#model { position: relative; top: ' + settings.animationHeight + 'px; }');
 sheet.insertRule('.bounce { animation: bounce ' + settings.animationSpeed * 3 + 's ease-in-out; animation-iteration-count: 1; }');
 
-var webSocket = $.simpleWebSocket({ url: 'ws://127.0.0.1:' + settings.wsServerPort + '/model', dataType: 'text' });
+var webSocket = $.simpleWebSocket({ url: 'ws://' + $(location).attr('hostname') + ':' + (settings.isRemote ? settings.remoteWsServerPort : settings.wsServerPort) + '/model', dataType: 'text' });
 
 function getNewModel(modelName) {
     modelLoaded = false;
-    $.get("http://127.0.0.1:" + settings.serverPort + "/getmodel/" + modelName, function (data) {
+    $.get("http://" + $(location).attr('host') + "/getmodel/" + modelName, function (data) {
         console.log(data);
         var model = $("#model");
         model.children().remove();

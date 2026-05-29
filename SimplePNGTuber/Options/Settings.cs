@@ -141,6 +141,33 @@ namespace SimplePNGTuber.Options
             }
         }
 
+        public bool IsRemote
+        {
+            get => settings.isRemote;
+            set
+            {
+                settings.isRemote = value;
+            }
+        }
+
+        public int RemoteServerPort
+        {
+            get => settings.remoteServerPort;
+            set
+            {
+                settings.remoteServerPort = value;
+            }
+        }
+
+        public int RemoteWsServerPort
+        {
+            get => settings.remoteWsServerPort;
+            set
+            {
+                settings.remoteWsServerPort = value;
+            }
+        }
+
         private Settings()
         {
 
@@ -157,7 +184,7 @@ namespace SimplePNGTuber.Options
             {
                 return new Settings()
                 {
-                    settings = new SettingsInternal("", "", 1, true, 0.05, 0.75, 0.03, 0, 8000, 8001, "#00ff00", 10, 0.1)
+                    settings = new SettingsInternal("", "", 1, true, 0.05, 0.75, 0.03, 0, 8000, 8001, "#00ff00", 10, 0.1, false, 8000, 8001)
                 };
             }
         }
@@ -179,17 +206,20 @@ namespace SimplePNGTuber.Options
             public double blinkFrequency { get; set; }
             public int micDevice { get; set; }
             public int serverPort { get; set; }
-
             public int wsServerPort { get; set; }
             public string bgColor { get; set; }
             public int animationHeight { get; set; }
             public double animationSpeed { get; set; }
+            public bool isRemote { get; set; }
+            public int remoteServerPort { get; set; }
+            public int remoteWsServerPort { get; set; }
 
             public SettingsInternal(string modelDir, string modelName, double modelScale, bool animateModel,
                 double voiceThreshold, double voiceSmoothing,
                 double blinkFrequency, int micDevice,
                 int serverPort, int wsServerPort, string bgColor,
-                int animationHeight, double animationSpeed)
+                int animationHeight, double animationSpeed,
+                bool isRemote, int remoteServerPort, int remoteWsServerPort)
             {
                 this.modelDir = modelDir;
                 this.modelName = modelName;
@@ -204,6 +234,9 @@ namespace SimplePNGTuber.Options
                 this.bgColor = bgColor;
                 this.animationHeight = animationHeight;
                 this.animationSpeed = animationSpeed;
+                this.isRemote = isRemote;
+                this.remoteServerPort = remoteServerPort;
+                this.remoteWsServerPort = remoteWsServerPort;
             }
         }
     }

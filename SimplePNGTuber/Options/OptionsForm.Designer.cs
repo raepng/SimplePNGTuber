@@ -57,10 +57,16 @@
             this.wsServerPort = new System.Windows.Forms.NumericUpDown();
             this.label11 = new System.Windows.Forms.Label();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.enableAnimCheckbox = new System.Windows.Forms.CheckBox();
             this.modelScale = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
-            this.enableAnimCheckbox = new System.Windows.Forms.CheckBox();
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.remoteServerPort = new System.Windows.Forms.NumericUpDown();
+            this.remoteWsServerPort = new System.Windows.Forms.NumericUpDown();
+            this.label14 = new System.Windows.Forms.Label();
+            this.isRemoteCheckbox = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.voiceThreshold)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.blinkFrequency)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bgColorPictureBox)).BeginInit();
@@ -72,6 +78,9 @@
             this.groupBox3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.modelScale)).BeginInit();
             this.groupBox4.SuspendLayout();
+            this.groupBox5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.remoteServerPort)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.remoteWsServerPort)).BeginInit();
             this.SuspendLayout();
             // 
             // dirText
@@ -365,6 +374,17 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Form Settings";
             // 
+            // enableAnimCheckbox
+            // 
+            this.enableAnimCheckbox.AutoSize = true;
+            this.enableAnimCheckbox.Location = new System.Drawing.Point(14, 81);
+            this.enableAnimCheckbox.Name = "enableAnimCheckbox";
+            this.enableAnimCheckbox.Size = new System.Drawing.Size(192, 17);
+            this.enableAnimCheckbox.TabIndex = 18;
+            this.enableAnimCheckbox.Text = "Enable Animation in Windows Form";
+            this.enableAnimCheckbox.UseVisualStyleBackColor = true;
+            this.enableAnimCheckbox.CheckedChanged += new System.EventHandler(this.enableAnimCheckbox_CheckedChanged);
+            // 
             // modelScale
             // 
             this.modelScale.Location = new System.Drawing.Point(109, 50);
@@ -410,22 +430,91 @@
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Server Settings";
             // 
-            // enableAnimCheckbox
+            // groupBox5
             // 
-            this.enableAnimCheckbox.AutoSize = true;
-            this.enableAnimCheckbox.Location = new System.Drawing.Point(14, 81);
-            this.enableAnimCheckbox.Name = "enableAnimCheckbox";
-            this.enableAnimCheckbox.Size = new System.Drawing.Size(192, 17);
-            this.enableAnimCheckbox.TabIndex = 18;
-            this.enableAnimCheckbox.Text = "Enable Animation in Windows Form";
-            this.enableAnimCheckbox.UseVisualStyleBackColor = true;
-            this.enableAnimCheckbox.CheckedChanged += new System.EventHandler(this.enableAnimCheckbox_CheckedChanged);
+            this.groupBox5.Controls.Add(this.isRemoteCheckbox);
+            this.groupBox5.Controls.Add(this.label13);
+            this.groupBox5.Controls.Add(this.remoteServerPort);
+            this.groupBox5.Controls.Add(this.remoteWsServerPort);
+            this.groupBox5.Controls.Add(this.label14);
+            this.groupBox5.Location = new System.Drawing.Point(12, 500);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(776, 123);
+            this.groupBox5.TabIndex = 23;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Remote Access Settings";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(11, 27);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(60, 13);
+            this.label13.TabIndex = 14;
+            this.label13.Text = "Server Port";
+            // 
+            // remoteServerPort
+            // 
+            this.remoteServerPort.Location = new System.Drawing.Point(95, 25);
+            this.remoteServerPort.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.remoteServerPort.Name = "remoteServerPort";
+            this.remoteServerPort.Size = new System.Drawing.Size(675, 20);
+            this.remoteServerPort.TabIndex = 15;
+            this.remoteServerPort.Value = new decimal(new int[] {
+            8000,
+            0,
+            0,
+            0});
+            this.remoteServerPort.ValueChanged += new System.EventHandler(this.remoteServerPort_ValueChanged);
+            // 
+            // remoteWsServerPort
+            // 
+            this.remoteWsServerPort.Location = new System.Drawing.Point(95, 51);
+            this.remoteWsServerPort.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.remoteWsServerPort.Name = "remoteWsServerPort";
+            this.remoteWsServerPort.Size = new System.Drawing.Size(675, 20);
+            this.remoteWsServerPort.TabIndex = 20;
+            this.remoteWsServerPort.Value = new decimal(new int[] {
+            8001,
+            0,
+            0,
+            0});
+            this.remoteWsServerPort.ValueChanged += new System.EventHandler(this.remoteWsServerPort_ValueChanged);
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(11, 53);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(78, 13);
+            this.label14.TabIndex = 19;
+            this.label14.Text = "WSServer Port";
+            // 
+            // isRemoteCheckbox
+            // 
+            this.isRemoteCheckbox.AutoSize = true;
+            this.isRemoteCheckbox.Location = new System.Drawing.Point(14, 85);
+            this.isRemoteCheckbox.Name = "isRemoteCheckbox";
+            this.isRemoteCheckbox.Size = new System.Drawing.Size(129, 17);
+            this.isRemoteCheckbox.TabIndex = 19;
+            this.isRemoteCheckbox.Text = "Connect from Remote";
+            this.isRemoteCheckbox.UseVisualStyleBackColor = true;
+            this.isRemoteCheckbox.CheckedChanged += new System.EventHandler(this.isRemoteCheckbox_CheckedChanged);
             // 
             // OptionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 506);
+            this.ClientSize = new System.Drawing.Size(800, 673);
+            this.Controls.Add(this.groupBox5);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
@@ -449,6 +538,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.modelScale)).EndInit();
             this.groupBox4.ResumeLayout(false);
             this.groupBox4.PerformLayout();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.remoteServerPort)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.remoteWsServerPort)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -488,5 +581,11 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.GroupBox groupBox4;
         private System.Windows.Forms.CheckBox enableAnimCheckbox;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.CheckBox isRemoteCheckbox;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.NumericUpDown remoteServerPort;
+        private System.Windows.Forms.NumericUpDown remoteWsServerPort;
+        private System.Windows.Forms.Label label14;
     }
 }

@@ -18,6 +18,9 @@ namespace SimplePNGTuber.Server.Endpoints
             settings = settings.Replace("%wsServerPort%", Settings.Instance.WSServerPort + "");
             settings = settings.Replace("%animationHeight%", Settings.Instance.AnimationHeight + "");
             settings = settings.Replace("%animationSpeed%", (Settings.Instance.AnimationSpeed + "").Replace(',', '.'));
+            settings = settings.Replace("%isRemote%", (Settings.Instance.IsRemote + "").ToLower());
+            settings = settings.Replace("%remoteServerPort%", Settings.Instance.RemoteServerPort + "");
+            settings = settings.Replace("%remoteWsServerPort%", Settings.Instance.RemoteWsServerPort + "");
 
             response.ContentType = "text/javascript";
             response.ContentEncoding = Encoding.UTF8;
